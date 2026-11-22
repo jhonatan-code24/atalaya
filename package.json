@@ -1,0 +1,15 @@
+{
+  "name": "atalaya",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "npx vercel dev",
+    "db:init": "node --env-file=.env scripts/init-db.js"
+  },
+  "dependencies": {
+    "pg": "^8.13.0"
+  }
+}

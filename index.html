@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Valetexpress · Valet Parking</title>
+    <style>
+        :root {
+            --navy: #0b1f3a;
+            --navy2: #16325c;
+            --ac: #f5a524;
+            --ac2: #d98c0b;
+            --bg: #f3f6fb;
+            --tx: #1c2a3f;
+            --mu: #66748a;
+            --ln: #dde4ef;
+            --ok: #12a36b;
+            --bad: #d63b3b;
+            --r: 16px
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--tx);
+            line-height: 1.5
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        .wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 18px
+        }
+
+        .view {
+            display: none
+        }
+
+        .view.on {
+            display: block;
+            animation: fade .5s
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: rgba(11, 31, 58, .92);
+            backdrop-filter: blur(10px);
+            color: #fff
+        }
+
+        .nv {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            gap: 14px
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.35rem
+        }
+
+        .brand small {
+            display: block;
+            font-size: .6rem;
+            font-weight: 500;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            opacity: .7;
+            line-height: 1.1
+        }
+
+        .logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--ac);
+            color: var(--navy);
+            display: grid;
+            place-items: center;
+            font-style: normal;
+            font-weight: 900;
+            transition: .4s
+        }
+
+        .brand:hover .logo {
+            transform: rotate(-12deg) scale(1.1)
+        }
+
+        .lk {
+            display: flex;
+            gap: 22px;
+            font-size: .92rem
+        }
+
+        .lk a {
+            opacity: .8;
+            position: relative;
+            padding: 4px 0
+        }
+
+        .lk a:hover {
+            opacity: 1
+        }
+
+        .lk a:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 2px;
+            width: 0;
+            background: var(--ac);
+            transition: .3s
+        }
+
+        .lk a:hover:after {
+            width: 100%
+        }
+
+        @media(max-width:760px) {
+            .lk {
+                display: none
+            }
+        }
+
+        /* BOTONES */
+        .btn {
+            display: inline-block;
+            border: 0;
+            border-radius: 12px;
+            padding: 15px 26px;
+            font: inherit;
+            font-weight: 700;
+            background: var(--ac);
+            color: var(--navy);
+            cursor: pointer;
+            transition: .25s;
+            position: relative;
+            overflow: hidden;
+            text-align: center
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 22px rgba(245, 165, 36, .4)
+        }
+
+        .btn:active {
+            transform: scale(.96)
+        }
+
+        .btn:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -80%;
+            width: 50%;
+            height: 100%;
+            background: rgba(255, 255, 255, .45);
+            transform: skewX(-20deg)
+        }
+
+        .btn:hover:after {
+            left: 130%;
+            transition: .6s
+        }
+
+        .btn.sm {
+            padding: 9px 18px
+        }
+
+        .btn.gh {
+            background: transparent;
+            color: #fff;
+            border: 1.5px solid rgba(255, 255, 255, .5)
+        }
+
+        .btn.dk {
+            background: var(--navy);
+            color: #fff
+        }
+
+        .btn.lt {
+            background: #fff;
+            color: var(--navy);
+            border: 1.5px solid var(--ln)
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, var(--navy), var(--navy2));
+            color: #fff;
+            padding: 130px 0 90px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .bl {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: .35;
+            animation: fl 9s ease-in-out infinite
+        }
+
+        .b1 {
+            width: 340px;
+            height: 340px;
+            background: var(--ac);
+            top: -90px;
+            right: -60px
+        }
+
+        .b2 {
+            width: 300px;
+            height: 300px;
+            background: #2f6fe4;
+            bottom: -120px;
+            left: -60px;
+            animation-delay: -4s
+        }
+
+        @keyframes fl {
+            50% {
+                transform: translate(30px, -26px) scale(1.1)
+            }
+        }
+
+        .hg {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 40px;
+            align-items: center;
+            position: relative
+        }
+
+        @media(max-width:860px) {
+            .hg {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .bdg {
+            display: inline-block;
+            background: rgba(255, 255, 255, .12);
+            border: 1px solid rgba(255, 255, 255, .25);
+            padding: 6px 14px;
+            border-radius: 99px;
+            font-size: .82rem
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.3rem);
+            line-height: 1.1;
+            margin: 16px 0
+        }
+
+        h1 em {
+            font-style: normal;
+            color: var(--ac)
+        }
+
+        .hero p {
+            opacity: .85;
+            max-width: 520px;
+            font-size: 1.05rem
+        }
+
+        .cta2 {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 24px 0
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap
+        }
+
+        .stats b {
+            display: block;
+            font-size: 1.7rem;
+            color: var(--ac)
+        }
+
+        .stats span {
+            font-size: .82rem;
+            opacity: .8
+        }
+
+        .hc {
+            background: #fff;
+            color: var(--tx);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+            animation: bob 4s ease-in-out infinite
+        }
+
+        @keyframes bob {
+            50% {
+                transform: translateY(-12px)
+            }
+        }
+
+        .road {
+            height: 6px;
+            background: repeating-linear-gradient(90deg, var(--ln) 0 18px, transparent 18px 32px);
+            border-radius: 3px;
+            margin: 14px 0;
+            position: relative
+        }
+
+        .car {
+            position: absolute;
+            top: -24px;
+            font-size: 1.7rem;
+            animation: drive 4s linear infinite
+        }
+
+        @keyframes drive {
+            from {
+                left: -8%
+            }
+
+            to {
+                left: 92%
+            }
+        }
+
+        .hc .pr {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--navy)
+        }
+
+        .mu {
+            color: var(--mu);
+            font-size: .85rem
+        }
+
+        /* SECCIONES */
+        .sec {
+            padding: 76px 0
+        }
+
+        .sec.dark {
+            background: var(--navy);
+            color: #fff
+        }
+
+        .st {
+            text-align: center;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            margin: 0 0 8px
+        }
+
+        .ss {
+            text-align: center;
+            color: var(--mu);
+            margin: 0 auto 38px;
+            max-width: 520px
+        }
+
+        .dark .ss {
+            color: #b9c6dc
+        }
+
+        .g4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 18px
+        }
+
+        .cd {
+            background: #fff;
+            border-radius: var(--r);
+            padding: 26px;
+            box-shadow: 0 6px 22px rgba(11, 31, 58, .07);
+            transition: .3s;
+            position: relative
+        }
+
+        .cd:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 18px 36px rgba(11, 31, 58, .15)
+        }
+
+        .ic {
+            font-size: 2rem;
+            display: inline-block;
+            transition: .3s
+        }
+
+        .cd:hover .ic {
+            transform: scale(1.25) rotate(-8deg)
+        }
+
+        .cd h3 {
+            margin: 10px 0 6px;
+            font-size: 1.05rem
+        }
+
+        .cd p {
+            margin: 0;
+            color: var(--mu);
+            font-size: .92rem
+        }
+
+        .stp {
+            background: rgba(255, 255, 255, .07);
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: var(--r);
+            padding: 24px;
+            transition: .3s
+        }
+
+        .stp:hover {
+            background: rgba(255, 255, 255, .14);
+            transform: translateY(-6px)
+        }
+
+        .stp i {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--ac);
+            color: var(--navy);
+            display: grid;
+            place-items: center;
+            font-style: normal;
+            font-weight: 800;
+            margin-bottom: 12px
+        }
+
+        .stp h3 {
+            margin: 0 0 6px
+        }
+
+        .stp p {
+            margin: 0;
+            color: #b9c6dc;
+            font-size: .92rem
+        }
+
+        .rt {
+            text-align: center;
+            cursor: pointer
+        }
+
+        .rt .pr {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--navy);
+            margin: 8px 0
+        }
+
+        .rt:hover {
+            border-color: var(--ac)
+        }
+
+        .rt .tag {
+            position: absolute;
+            top: -11px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--ac);
+            color: var(--navy);
+            font-size: .72rem;
+            font-weight: 800;
+            padding: 3px 12px;
+            border-radius: 99px
+        }
+
+        .rt .btn {
+            margin-top: 14px;
+            width: 100%;
+            padding: 11px
+        }
+
+        details {
+            background: #fff;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 14px rgba(11, 31, 58, .06)
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 700;
+            list-style: none;
+            display: flex;
+            justify-content: space-between
+        }
+
+        summary:after {
+            content: "+";
+            font-size: 1.3rem;
+            color: var(--ac2);
+            transition: .3s
+        }
+
+        details[open] summary:after {
+            transform: rotate(135deg)
+        }
+
+        details p {
+            margin: 10px 0 0;
+            color: var(--mu);
+            animation: fade .35s
+        }
+
+        .cta {
+            background: linear-gradient(135deg, var(--ac), var(--ac2));
+            text-align: center;
+            padding: 56px 18px;
+            color: var(--navy)
+        }
+
+        .cta h2 {
+            margin: 0 0 16px;
+            font-size: 1.8rem
+        }
+
+        footer {
+            background: var(--navy);
+            color: #9fb0cb;
+            text-align: center;
+            font-size: .82rem;
+            padding: 24px 18px
+        }
+
+        section[id] {
+            scroll-margin-top: 64px
+        }
+
+        .rv {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity .7s, transform .7s
+        }
+
+        .rv.in {
+            opacity: 1;
+            transform: none
+        }
+
+        /* RESERVA */
+        .rh {
+            background: linear-gradient(135deg, var(--navy), var(--navy2));
+            color: #fff;
+            padding: 96px 0 70px
+        }
+
+        .rh h2 {
+            margin: 0 0 4px;
+            font-size: 1.8rem
+        }
+
+        .rh p {
+            margin: 0;
+            opacity: .8
+        }
+
+        .bk {
+            margin-top: -44px;
+            padding-bottom: 50px
+        }
+
+        .pg {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 22px;
+            background: #fff;
+            border-radius: var(--r);
+            padding: 16px 26px;
+            box-shadow: 0 6px 22px rgba(11, 31, 58, .08)
+        }
+
+        .pg:before,
+        .pg i.fl {
+            content: "";
+            position: absolute;
+            top: 36px;
+            left: 60px;
+            right: 60px;
+            height: 3px;
+            background: var(--ln)
+        }
+
+        .pg i.fl {
+            background: var(--ok);
+            right: auto;
+            width: 0;
+            transition: width .5s;
+            z-index: 1
+        }
+
+        .sd {
+            text-align: center;
+            font-size: .8rem;
+            color: var(--mu);
+            z-index: 2;
+            width: 90px
+        }
+
+        .sd b {
+            display: grid;
+            place-items: center;
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 4px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid var(--ln);
+            transition: .4s;
+            color: var(--mu)
+        }
+
+        .sd.on b {
+            border-color: var(--ac);
+            color: var(--navy);
+            transform: scale(1.15);
+            background: #fff6e2
+        }
+
+        .sd.dn b {
+            background: var(--ok);
+            border-color: var(--ok);
+            color: #fff
+        }
+
+        .g2 {
+            display: grid;
+            grid-template-columns: 1fr 330px;
+            gap: 20px;
+            align-items: start
+        }
+
+        @media(max-width:860px) {
+            .g2 {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .pan {
+            background: #fff;
+            border-radius: var(--r);
+            padding: 24px;
+            box-shadow: 0 6px 22px rgba(11, 31, 58, .08)
+        }
+
+        .pn {
+            display: none
+        }
+
+        .pn.on {
+            display: block;
+            animation: sl .45s
+        }
+
+        @keyframes sl {
+            from {
+                opacity: 0;
+                transform: translateX(30px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .pn h3 {
+            margin: 0 0 16px
+        }
+
+        .rw {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px
+        }
+
+        @media(max-width:560px) {
+            .rw {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .f {
+            margin-bottom: 14px
+        }
+
+        label {
+            display: block;
+            font-size: .84rem;
+            font-weight: 600;
+            margin-bottom: 5px
+        }
+
+        label span {
+            color: var(--mu);
+            font-weight: 400
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font: inherit;
+            border: 1.5px solid var(--ln);
+            border-radius: 10px;
+            transition: .2s
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--navy2);
+            box-shadow: 0 0 0 4px rgba(22, 50, 92, .12)
+        }
+
+        .f.err input,
+        .f.err .pills {
+            border-color: var(--bad)
+        }
+
+        .f.err {
+            animation: sh .35s
+        }
+
+        @keyframes sh {
+            25% {
+                transform: translateX(-6px)
+            }
+
+            75% {
+                transform: translateX(6px)
+            }
+        }
+
+        .msg {
+            display: block;
+            color: var(--bad);
+            font-size: .78rem;
+            margin-top: 4px
+        }
+
+        .pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        .pill {
+            border: 1.5px solid var(--ln);
+            background: #fff;
+            border-radius: 99px;
+            padding: 9px 16px;
+            font: inherit;
+            font-size: .88rem;
+            cursor: pointer;
+            transition: .25s
+        }
+
+        .pill:hover {
+            transform: translateY(-3px);
+            border-color: var(--navy2)
+        }
+
+        .pill:active {
+            transform: scale(.93)
+        }
+
+        .pill.on {
+            background: var(--navy);
+            color: #fff;
+            border-color: var(--navy);
+            animation: pop .35s
+        }
+
+        @keyframes pop {
+            50% {
+                transform: scale(1.12)
+            }
+        }
+
+        .nav2 {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin-top: 20px
+        }
+
+        .nav2 .btn {
+            flex: 1
+        }
+
+        .sum {
+            position: sticky;
+            top: 80px
+        }
+
+        @media(max-width:860px) {
+            .sum {
+                position: static
+            }
+        }
+
+        .sum h3 {
+            margin: 0 0 10px
+        }
+
+        .big {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--navy)
+        }
+
+        .ln {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--ln);
+            font-size: .9rem;
+            animation: fade .4s
+        }
+
+        .al {
+            background: #fdecec;
+            color: var(--bad);
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: .88rem
+        }
+
+        .rg {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 24px
+        }
+
+        @media(max-width:560px) {
+            .rg {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .rg div {
+            padding: 7px 0;
+            border-bottom: 1px solid var(--ln);
+            font-size: .9rem
+        }
+
+        .rg small {
+            display: block;
+            color: var(--mu);
+            font-size: .72rem;
+            text-transform: uppercase
+        }
+
+        #receipt {
+            display: none;
+            max-width: 760px;
+            margin: 0 auto
+        }
+
+        .ck {
+            width: 80px;
+            height: 80px;
+            display: block;
+            margin: 0 auto 10px
+        }
+
+        .ck circle {
+            fill: none;
+            stroke: var(--ok);
+            stroke-width: 3;
+            stroke-dasharray: 152;
+            stroke-dashoffset: 152;
+            animation: dr .7s forwards
+        }
+
+        .ck path {
+            fill: none;
+            stroke: var(--ok);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 40;
+            stroke-dashoffset: 40;
+            animation: dr .5s .6s forwards
+        }
+
+        @keyframes dr {
+            to {
+                stroke-dashoffset: 0
+            }
+        }
+
+        .code {
+            display: block;
+            width: max-content;
+            margin: 8px auto 18px;
+            background: var(--navy);
+            color: var(--ac);
+            padding: 9px 20px;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            animation: pop .6s 1s
+        }
+
+        @media(print) {
+
+            nav,
+            .rh,
+            .nav2,
+            footer,
+            .acts {
+                display: none !important
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            * {
+                animation: none !important;
+                transition: none !important
+            }
+
+            .rv {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .na {
+            display: flex;
+            gap: 14px;
+            font-size: .88rem;
+            align-items: center
+        }
+
+        .na a {
+            opacity: .85
+        }
+
+        .na a:hover {
+            opacity: 1;
+            color: var(--ac)
+        }
+
+        .rg2 {
+            display: flex;
+            gap: 14px;
+            align-items: center
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 16px
+        }
+
+        .tab {
+            flex: 1;
+            border: 0;
+            background: none;
+            padding: 10px;
+            font: inherit;
+            font-weight: 600;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: .3s;
+            color: var(--mu)
+        }
+
+        .tab.on {
+            background: var(--navy);
+            color: #fff
+        }
+
+        .bkc {
+            margin-bottom: 16px;
+            animation: fade .5s
+        }
+
+        .bkh {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px
+        }
+
+        .bg {
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: .78rem;
+            font-weight: 700
+        }
+
+        .s1 {
+            background: #e3edff;
+            color: #2457c5
+        }
+
+        .s2 {
+            background: #fff1d6;
+            color: var(--ac2)
+        }
+
+        .s3 {
+            background: #dcf5ea;
+            color: var(--ok)
+        }
+
+        .stars {
+            display: flex;
+            gap: 4px;
+            margin: 4px 0 10px
+        }
+
+        .star {
+            border: 0;
+            background: none;
+            font-size: 1.9rem;
+            color: #cbd3e1;
+            cursor: pointer;
+            transition: .2s;
+            padding: 0;
+            line-height: 1
+        }
+
+        .star:hover {
+            transform: scale(1.3) rotate(-10deg)
+        }
+
+        .star.on {
+            color: var(--ac);
+            animation: pop .35s
+        }
+
+        .stars.ro .star {
+            font-size: 1.4rem;
+            cursor: default
+        }
+
+        .cm {
+            margin-bottom: 8px
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            font: inherit;
+            border: 1.5px solid var(--ln);
+            border-radius: 10px;
+            background: #fff
+        }
+
+        .xg {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 10px
+        }
+
+        .xt {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            text-align: left;
+            border: 1.5px solid var(--ln);
+            background: #fff;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font: inherit;
+            cursor: pointer;
+            transition: .25s;
+            position: relative
+        }
+
+        .xt:hover {
+            transform: translateY(-3px);
+            border-color: var(--navy2)
+        }
+
+        .xt:active {
+            transform: scale(.97)
+        }
+
+        .xt i {
+            font-style: normal;
+            font-size: 1.6rem
+        }
+
+        .xt span {
+            flex: 1;
+            font-size: .88rem;
+            font-weight: 600
+        }
+
+        .xt small {
+            display: block;
+            color: var(--mu);
+            font-size: .76rem;
+            font-weight: 400
+        }
+
+        .xt b {
+            color: var(--navy)
+        }
+
+        .xt.on {
+            border-color: var(--ok);
+            background: #effaf5;
+            animation: pop .35s
+        }
+
+        .xt.on:after {
+            content: "✓";
+            position: absolute;
+            top: -9px;
+            right: -9px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--ok);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font-size: .8rem
+        }
+
+        .g2c {
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr))
+        }
+
+        .sv {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            padding: 20px
+        }
+
+        .sv h3 {
+            margin: 2px 0 6px;
+            font-size: 1.08rem
+        }
+
+        .sv p {
+            line-height: 1.55
+        }
+
+        .th {
+            flex: 0 0 104px;
+            height: 104px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            font-size: 2.8rem;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 8px 18px rgba(11, 31, 58, .18);
+            transition: .4s
+        }
+
+        .sv:hover .th {
+            transform: scale(1.07) rotate(-3deg)
+        }
+
+        @media(max-width:480px) {
+            .th {
+                flex-basis: 84px;
+                height: 84px;
+                font-size: 2.2rem
+            }
+
+            .sv {
+                gap: 14px;
+                padding: 16px
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <script src="/config.js"></script>
+
+    <nav>
+        <div class="wrap nv">
+            <a class="brand" href="#inicio"><i class="logo">V</i><span>Valetexpress<small
+                        id="brandSub"></small></span></a>
+            <div class="lk"><a href="#servicios">Servicios</a><a href="#como">Cómo funciona</a><a
+                    href="#tarifas">Tarifas</a><a href="#faq">Preguntas</a></div>
+            <div class="rg2"><span class="na" id="navAcc"></span><a class="btn sm" href="#reserva">Reservar</a></div>
+        </div>
+    </nav>
+
+    <!-- ================= PÁGINA PRINCIPAL ================= -->
+    <div id="v-inicio" class="view on">
+        <header class="hero">
+            <div class="bl b1"></div>
+            <div class="bl b2"></div>
+            <div class="wrap hg">
+                <div>
+                    <span class="bdg" id="hBadge"></span>
+                    <h1 id="hTitle"></h1>
+                    <p id="hText"></p>
+                    <div class="cta2"><a class="btn" href="#reserva">Reservar ahora →</a><a class="btn gh"
+                            href="#como">Cómo funciona</a></div>
+                    <div class="stats" id="stats"></div>
+                </div>
+                <div class="hc">
+                    <div class="mu">📍 <span id="hAir"></span></div>
+                    <div class="road"><span class="car">🚗</span></div>
+                    <div class="mu">Desde</div>
+                    <div class="pr" id="hFrom"></div>
+                    <div class="mu">por día · reserva en minutos</div>
+                </div>
+            </div>
+        </header>
+        <section id="servicios" class="sec wrap">
+            <h2 class="st rv">Todo resuelto desde que llegas</h2>
+            <p class="ss rv">Un servicio pensado para que tu viaje empiece sin estrés.</p>
+            <div class="g4 g2c" id="svc"></div>
+        </section>
+        <section id="como" class="sec dark">
+            <div class="wrap">
+                <h2 class="st rv">Así de fácil</h2>
+                <p class="ss rv">Cuatro pasos entre tú y tu viaje.</p>
+                <div class="g4" id="stp"></div>
+            </div>
+        </section>
+        <section id="tarifas" class="sec wrap">
+            <h2 class="st rv">Tarifa por día</h2>
+            <p class="ss rv">Pagas por cada día (24 h) de tu viaje. Precios con IVA incluido.</p>
+            <div class="g4" id="rts" style="max-width:320px;margin:0 auto"></div>
+            <p class="mu rv" id="payStrip" style="text-align:center;margin-top:26px"></p>
+            <p class="mu rv" id="xStrip" style="text-align:center;margin-top:6px"></p>
+        </section>
+        <section id="faq" class="sec wrap" style="max-width:760px;padding-top:20px">
+            <h2 class="st rv">Preguntas frecuentes</h2><br>
+            <div id="faqs"></div>
+        </section>
+        <div class="cta">
+            <h2>¿Listo para viajar sin preocuparte del parqueadero?</h2><a class="btn dk" href="#reserva">Reservar mi
+                valet</a>
+        </div>
+    </div>
+
+    <!-- ================= RESERVA ================= -->
+    <div id="v-reserva" class="view">
+        <div class="rh">
+            <div class="wrap">
+                <h2>Reserva tu valet</h2>
+                <p id="rSub"></p>
+            </div>
+        </div>
+        <div class="wrap bk">
+            <div id="wz">
+                <div class="pg"><i class="fl" id="fl"></i>
+                    <div class="sd"><b>1</b>Tus datos</div>
+                    <div class="sd"><b>2</b>Viaje y tarifa</div>
+                    <div class="sd"><b>3</b>Confirmar</div>
+                </div>
+                <div class="g2">
+                    <div class="pan">
+                        <div class="pn on">
+                            <h3>Cliente y vehículo</h3>
+                            <div class="f"><label for="nombre">Nombre completo</label><input id="nombre"
+                                    autocomplete="name"><small class="msg"></small></div>
+                            <div class="rw">
+                                <div class="f"><label for="email">Correo electrónico</label><input id="email"
+                                        type="email" autocomplete="email"><small class="msg"></small></div>
+                                <div class="f"><label for="tel">Teléfono / WhatsApp</label><input id="tel"
+                                        type="tel"><small class="msg"></small></div>
+                                <div class="f"><label for="placa" id="lPl"></label><input id="placa"
+                                        style="text-transform:uppercase"><small class="msg"></small></div>
+                                <div class="f"><label for="modelo">Marca y modelo</label><input id="modelo"
+                                        placeholder="Ej: Renault Duster 2021"><small class="msg"></small></div>
+                            </div>
+                        </div>
+                        <div class="pn">
+                            <h3>Itinerario y tarifa</h3>
+                            <div class="rw">
+                                <div class="f"><label for="entrega">Entrega del vehículo <span>(recibe
+                                            Valetexpress)</span></label><input id="entrega" type="datetime-local"><small
+                                        class="msg"></small></div>
+                                <div class="f"><label for="recogida">Recogida <span>(entrega
+                                            Valetexpress)</span></label><input id="recogida"
+                                        type="datetime-local"><small class="msg"></small></div>
+                            </div>
+                            <div class="f"><label>Punto de encuentro para la entrega</label>
+                                <div class="pills" id="pTerm"></div><small class="msg"></small>
+                            </div>
+                            <div class="f"><label>Punto de encuentro para la recogida <span>(podrás cambiarlo cuando
+                                        quieras en “Mis reservas”)</span></label>
+                                <div class="pills" id="pTerm2"></div><small class="msg"></small>
+                            </div>
+                            <div class="f"><label for="vuelo">Número de vuelo <span>(opcional)</span></label><input
+                                    id="vuelo" placeholder="Ej: AV 9500" style="text-transform:uppercase"></div>
+                            <p class="mu" id="dayInfo" style="margin:0 0 14px"></p>
+                            <div class="f"><label>Servicios adicionales <span>(opcional)</span></label>
+                                <div class="xg" id="xtras"></div>
+                            </div>
+                        </div>
+                        <div class="pn">
+                            <h3>Revisa y confirma</h3>
+                            <div class="rg" id="rev"></div>
+                            <h3 style="margin:24px 0 10px">Método de pago</h3>
+                            <div class="ln" style="margin-bottom:12px"><span>Total a pagar</span><b id="payTot"></b>
+                            </div>
+                            <div class="f">
+                                <div class="pills" id="pPay"></div><small class="msg"></small>
+                            </div>
+                            <div id="payF"></div>
+                            <p class="mu">🔒 Simulación: no se realiza ningún cobro ni se guardan los datos de tu
+                                tarjeta.</p>
+                        </div>
+                        <div class="nav2"><button class="btn lt" id="bBack" type="button">← Atrás</button><button
+                                class="btn" id="bNext" type="button">Continuar →</button></div>
+                    </div>
+                    <aside class="pan sum">
+                        <h3>Resumen estimado</h3>
+                        <div id="sumB"></div>
+                    </aside>
+                </div>
+            </div>
+
+            <div id="receipt" class="pan">
+                <svg class="ck" viewBox="0 0 52 52">
+                    <circle cx="26" cy="26" r="24" />
+                    <path d="M14 27l8 8 16-17" />
+                </svg>
+                <h2 style="text-align:center;margin:0">¡Reserva simulada confirmada!</h2>
+                <p class="mu" style="text-align:center;margin:4px 0">Comprobante de ejemplo · sin cobro real</p>
+                <span class="code" id="rCode"></span>
+                <div class="rg" id="rData"></div>
+                <div id="rPrice" style="margin-top:16px"></div>
+                <p class="mu" style="margin-top:12px">ℹ️ Puedes cambiar la terminal de recogida cuando quieras desde
+                    “Mis reservas”.</p>
+                <div class="nav2 acts"><button class="btn dk" onclick="window.print()">Imprimir</button><a
+                        class="btn dk" href="#reservas">Mis reservas</a><a class="btn" href="#inicio">Volver al
+                        inicio</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= CUENTA: INGRESAR / CREAR ================= -->
+    <div id="v-ingresar" class="view">
+        <div class="rh">
+            <div class="wrap">
+                <h2>Tu cuenta Valetexpress</h2>
+                <p>Guarda tus reservas y califica el servicio.</p>
+            </div>
+        </div>
+        <div class="wrap bk" style="max-width:480px">
+            <form class="pan" id="aForm" novalidate>
+                <div class="tabs"><button type="button" class="tab on" data-m="in">Ingresar</button><button
+                        type="button" class="tab" data-m="up">Crear cuenta</button></div>
+                <p class="mu" id="aNote"></p>
+                <div class="f rgo" style="display:none"><label for="aNombre">Nombre completo</label><input id="aNombre"
+                        autocomplete="name"><small class="msg"></small></div>
+                <div class="f"><label for="aEmail">Correo electrónico</label><input id="aEmail" type="email"
+                        autocomplete="email"><small class="msg"></small></div>
+                <div class="f rgo" style="display:none"><label for="aTel">Teléfono / WhatsApp</label><input id="aTel"
+                        type="tel"><small class="msg"></small></div>
+                <div class="f"><label for="aPass">Contraseña</label><input id="aPass" type="password"
+                        autocomplete="current-password" placeholder="Mínimo 6 caracteres"><small class="msg"></small>
+                </div>
+                <button class="btn" id="aBtn" style="width:100%">Ingresar</button>
+                <p class="mu" style="text-align:center;margin-bottom:0">Demo: las cuentas se guardan solo en este
+                    navegador.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MIS RESERVAS ================= -->
+    <div id="v-reservas" class="view">
+        <div class="rh">
+            <div class="wrap">
+                <h2 id="bkTitle">Mis reservas</h2>
+                <p>Tu historial y tus calificaciones.</p>
+            </div>
+        </div>
+        <div class="wrap bk">
+            <div id="bkList"></div>
+        </div>
+    </div>
+
+    <footer id="foot"></footer>
+
+    <script>
+        /* ---------- Cliente de la API ---------- */
+        async function api(url, body, method) {
+            const r = await fetch(url, body ? { method: method || 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : undefined);
+            const j = await r.json().catch(() => ({}));
+            if (!r.ok) throw new Error(j.error || 'Error del servidor');
+            return j;
+        }
+        const P = ATALAYA_CONFIG.profiles[ATALAYA_CONFIG.activeProfile], C = ATALAYA_CONFIG.content;
+        const $ = id => document.getElementById(id);
+        const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        const moneyP = (n, p) => new Intl.NumberFormat(p.locale, { style: 'currency', currency: p.currency, minimumFractionDigits: p.decimals, maximumFractionDigits: p.decimals }).format(n);
+        const money = n => moneyP(n, P);
+        const nowLocal = () => new Date().toLocaleString('sv-SE', { timeZone: P.timeZone }).slice(0, 16).replace(' ', 'T');
+        const ms = v => Date.parse(v + ':00Z'); // se interpreta como hora local de la sede
+        const fmtDate = v => new Intl.DateTimeFormat(P.locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }).format(new Date(ms(v)));
+        const UNIT = { hour: ['hora', 'horas'], day: ['día', 'días'], week: ['semana', 'semanas'], month: ['mes', 'meses'] };
+        const NAMES = { hour: 'Por hora', day: 'Por día', week: 'Por semana', month: 'Por mes' };
+        const NOTE = { hour: 'Trayectos cortos', day: 'Por día (24 h) iniciado', week: 'Viajes largos', month: 'Estancias extendidas' };
+        let MODO = 'day', TERM = '', TERM2 = '', step = 0;
+
+        /* ---------- Contenido de la página principal ---------- */
+        document.title = 'Valetexpress · Valet Parking (' + ATALAYA_CONFIG.activeProfile + ')';
+        $('hBadge').textContent = '✈ ' + C.heroBadge; $('hTitle').innerHTML = C.heroTitle; $('hText').textContent = C.heroText;
+        $('hAir').textContent = P.airport; $('hFrom').textContent = money(P.rates.day);
+        $('stats').innerHTML = C.stats.map(s => '<div><b data-n="' + s[0] + '" data-s="' + s[1] + '">0</b><span>' + s[2] + '</span></div>').join('');
+        const GR = ['#0b1f3a,#16325c', '#16325c,#2f6fe4', '#d98c0b,#f5a524', '#0b8f5a,#12a36b'];
+        $('svc').innerHTML = C.services.map((s, i) => '<div class="cd sv rv"><div class="th" style="background-image:' + (s[3] ? 'url(\'' + esc(s[3]) + '\'),' : '') + 'linear-gradient(135deg,' + GR[i % 4] + ')">' + (s[3] ? '' : s[0]) + '</div><div><h3>' + s[1] + '</h3><p>' + s[2] + '</p></div></div>').join('');
+        $('stp').innerHTML = C.steps.map((s, i) => '<div class="stp rv"><i>' + (i + 1) + '</i><h3>' + s[0] + '</h3><p>' + s[1] + '</p></div>').join('');
+        $('rts').innerHTML = Object.keys(P.rates).filter(u => ATALAYA_CONFIG.billingMode !== 'day' || u === 'day').map(u => '<div class="cd rt rv" data-u="' + u + '">' + '' + '<h3>' + NAMES[u] + '</h3><div class="pr">' + money(P.rates[u]) + '</div><p>' + NOTE[u] + '</p><button class="btn dk">Reservar ahora</button></div>').join('');
+        if (ATALAYA_CONFIG.billingMode !== 'day') $('rts').removeAttribute('style');
+        $('faqs').innerHTML = C.faq.map(f => '<details class="rv"><summary>' + f[0] + '</summary><p>' + f[1] + '</p></details>').join('');
+        $('foot').textContent = C.footer + ' · ' + P.countryName + ' · ' + P.timeZone;
+        $('rSub').textContent = '📍 ' + P.airport;
+        $('lPl').textContent = P.plateLabel; $('placa').placeholder = P.plate; $('tel').placeholder = P.phone;
+
+        // Elegir tarifa desde la página principal → abre la reserva con esa modalidad
+        $('rts').onclick = e => { const c = e.target.closest('.rt'); if (c) { setModo(c.dataset.u); location.hash = 'reserva'; } };
+
+        /* ---------- Animaciones: aparición al hacer scroll y contadores ---------- */
+        const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } }), { threshold: .15 });
+        document.querySelectorAll('.rv').forEach(el => io.observe(el));
+        function counters() {
+            document.querySelectorAll('#stats b').forEach(b => {
+                const n = +b.dataset.n, t0 = performance.now();
+                (function tick(t) { const k = Math.min((t - t0) / 1400, 1); b.textContent = Math.round(n * k) + b.dataset.s; if (k < 1) requestAnimationFrame(tick); })(t0);
+            });
+        }
+
+        /* ---------- Navegación (#inicio, #reserva, #servicios...) ---------- */
+        function route() {
+            const h = location.hash.slice(1) || 'inicio', V = { reserva: 'v-reserva', ingresar: 'v-ingresar', reservas: 'v-reservas' }, cur = V[h] || 'v-inicio';
+            if (h === 'reservas' && !me()) { location.hash = 'ingresar'; return; }
+            if (h === 'ingresar' && me()) { location.hash = 'reservas'; return; }
+            ['v-inicio', 'v-reserva', 'v-ingresar', 'v-reservas'].forEach(i => $(i).classList.toggle('on', i === cur));
+            if (h === 'reserva') {
+                const u = me(); if (u) { if (!v('nombre')) $('nombre').value = u.nombre; if (!v('email')) $('email').value = u.email; if (!v('tel')) $('tel').value = u.tel; }
+                setMin(); refreshQuote(); window.scrollTo(0, 0);
+            } else if (h === 'reservas') { renderBk(); syncBk().then(renderBk); window.scrollTo(0, 0); }
+            else if (h === 'ingresar') { $('aNote').textContent = PEND ? 'Inicia sesión o crea tu cuenta para confirmar tu reserva. Tus datos se conservan.' : ''; window.scrollTo(0, 0); }
+            else if (['servicios', 'como', 'tarifas', 'faq'].includes(h)) $(h).scrollIntoView({ behavior: 'smooth' });
+            else { window.scrollTo(0, 0); counters(); }
+        }
+        addEventListener('hashchange', route);
+
+        /* ---------- Opciones tipo botón (terminal y modalidad) ---------- */
+        function pills(id, opts, cur, cb) {
+            const el = $(id);
+            el.innerHTML = opts.map(o => '<button type="button" class="pill' + (o[0] === cur ? ' on' : '') + '" data-v="' + esc(o[0]) + '">' + esc(o[1]) + '</button>').join('');
+            el.onclick = e => { const b = e.target.closest('.pill'); if (!b) return;[...el.children].forEach(x => x.classList.toggle('on', x === b)); cb(b.dataset.v); };
+        }
+        const modos = [['day', 'Por día']];
+        function setModo(m) { MODO = m; }
+        setModo('day');
+        pills('pTerm', P.terminals.map(t => [t, t]), '', v => { TERM = v; setErr($('pTerm'), ''); });
+        pills('pTerm2', P.terminals.map(t => [t, t]), '', v => { TERM2 = v; setErr($('pTerm2'), ''); });
+
+        /* ---------- Cálculo de tarifa ---------- */
+        const setMin = () => { $('entrega').min = nowLocal(); $('recogida').min = $('entrega').value || nowLocal(); };
+        // La tarifa y la disponibilidad las calcula el servidor (/api/quote)
+        let QUOTE = null, QKEY = '';
+        const calc = () => QUOTE;
+        async function refreshQuote() {
+            const a = $('entrega').value, b = $('recogida').value, ex = [...EXT], key = a + '|' + b + '|' + ex;
+            QKEY = key;
+            if (!a || !b) { QUOTE = null; return renderSum(); }
+            if (ms(b) <= ms(a)) { QUOTE = { error: 'La recogida debe ser posterior a la entrega.' }; return renderSum(); }
+            try {
+                const r = await api('/api/quote', { entrega: a, recogida: b, extras: ex });
+                if (QKEY !== key) return;
+                r.ex = r.extras; if (!r.available) r.error = 'No hay disponibilidad para esas fechas.'; QUOTE = r;
+            } catch (e) { if (QKEY !== key) return; QUOTE = { error: e.message }; }
+            renderSum();
+        }
+        function priceHTML(c) {
+            return '<div class="ln"><span>Duración</span><b>' + esc(c.dur) + '</b></div>'
+                + c.lines.map(l => '<div class="ln"><span>' + l.q + ' ' + UNIT[l.u][l.q === 1 ? 0 : 1] + ' × ' + money(P.rates[l.u]) + '</span><b>' + money(l.amount) + '</b></div>').join('')
+                + '<div class="ln"><span>Servicio valet</span><b>' + money(P.valetFee) + '</b></div>'
+                + c.ex.map(x => '<div class="ln"><span>' + x.icon + ' ' + esc(x.name) + '</span><b>' + money(x.price) + '</b></div>').join('')
+                + '<div class="ln" style="align-items:end"><span>Total estimado</span><span class="big">' + money(c.total) + '</span></div>'
+                + '<p class="mu" style="margin:6px 0 0">Incluye IVA (' + Math.round(P.taxRate * 100) + '%): ' + money(c.tax) + '</p>' + c.ex.filter(x => x.note).map(x => '<p class="mu" style="margin:4px 0 0">' + x.icon + ' ' + esc(x.note) + '</p>').join('');
+        }
+        function renderSum() {
+            const c = calc();
+            $('sumB').innerHTML = !c ? '<p class="mu">Elige fechas de entrega y recogida para ver tu tarifa.</p>' : c.error ? '<div class="al">' + c.error + '</div>' : priceHTML(c);
+        }
+        ['entrega', 'recogida'].forEach(id => $(id).addEventListener('input', () => { setMin(); refreshQuote(); }));
+
+        /* ---------- Asistente de 3 pasos ---------- */
+        const v = id => $(id).value.trim();
+        function setErr(el, m) {
+            const f = el.closest('.f'), s = f.querySelector('.msg');
+            f.classList.remove('err'); void f.offsetWidth; f.classList.toggle('err', !!m); s.textContent = m || ''; return !m;
+        }
+        function validate(s) {
+            let ok = true, first = null;
+            const chk = (id, m) => { const el = $(id); if (!setErr(el, m)) { ok = false; first = first || el; } };
+            if (s === 0) {
+                chk('nombre', v('nombre').length < 3 ? 'Ingresa tu nombre completo.' : '');
+                chk('email', /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v('email')) ? '' : 'Correo no válido.');
+                chk('tel', v('tel').replace(/\D/g, '').length < 7 ? 'Ingresa un teléfono válido.' : '');
+                chk('placa', v('placa').length < 5 ? 'Ingresa tu ' + P.plateLabel.toLowerCase() + '.' : '');
+                chk('modelo', v('modelo').length < 2 ? 'Indica marca y modelo.' : '');
+            } else if (s === 1) {
+                const c = calc();
+                chk('entrega', !v('entrega') ? 'Indica la fecha de entrega.' : v('entrega') < nowLocal() ? 'No puede estar en el pasado.' : '');
+                chk('recogida', !v('recogida') ? 'Indica la fecha de recogida.' : c && c.error ? c.error : !c ? 'Calculando la tarifa…, intenta de nuevo en un instante.' : '');
+                chk('pTerm', TERM ? '' : 'Selecciona el punto de entrega.');
+                chk('pTerm2', TERM2 ? '' : 'Selecciona el punto de recogida.');
+            }
+            if (first && first.focus) first.focus();
+            return ok;
+        }
+        function items() {
+            return [['Cliente', v('nombre')], ['Correo', v('email')], ['Teléfono / WhatsApp', v('tel')], [P.plateLabel, v('placa').toUpperCase()],
+            ['Vehículo', v('modelo')], ['Vuelo', v('vuelo').toUpperCase() || '—'], ['Entrega a Valetexpress', fmtDate($('entrega').value)],
+            ['Recogida', fmtDate($('recogida').value)], ['Punto de entrega', TERM], ['Punto de recogida', TERM2], ['Servicios adicionales', exSel().map(x => x.name).join(', ') || 'Ninguno'], ['Sede', P.airport]];
+        }
+        const grid = a => a.map(i => '<div><small>' + esc(i[0]) + '</small>' + esc(i[1]) + '</div>').join('');
+        function go(n) {
+            step = n;
+            document.querySelectorAll('.pn').forEach((p, i) => p.classList.toggle('on', i === n));
+            document.querySelectorAll('.sd').forEach((d, i) => { d.classList.toggle('on', i === n); d.classList.toggle('dn', i < n); d.firstChild.textContent = i < n ? '✓' : i + 1; });
+            $('fl').style.width = 'calc((100% - 120px) * ' + n / 2 + ')';
+            $('bBack').style.visibility = n ? 'visible' : 'hidden';
+            $('bNext').textContent = n === 2 ? 'Pagar y confirmar ✓' : 'Continuar →';
+            if (n === 2) { $('rev').innerHTML = grid(items()); $('payTot').textContent = money(calc().total); }
+            window.scrollTo({ top: 120, behavior: 'smooth' });
+        }
+        $('bBack').onclick = () => go(step - 1);
+        $('bNext').onclick = async () => {
+            if (!validate(step) || (step === 2 && !validatePay())) return;
+            if (step < 2) return go(step + 1);
+            const u = me(); if (!u) { PEND = true; location.hash = 'ingresar'; return; }
+            const btn = $('bNext'); btn.disabled = true; btn.textContent = 'Guardando…';
+            try {
+                // El servidor valida, comprueba disponibilidad, recalcula el monto y guarda en la base de datos
+                const r = await api('/api/reservations', {
+                    nombre: v('nombre'), email: v('email'), tel: v('tel'), placa: v('placa'), modelo: v('modelo'), vuelo: v('vuelo'),
+                    entrega: v('entrega'), recogida: v('recogida'), termEntrega: TERM, termRecogida: TERM2,
+                    extras: [...EXT], paymentMethod: PAY, paymentDetail: payText()
+                });
+                const b = r.reservation, bk = ld('atl_bk', []);
+                bk.push({ code: b.code, email: u.email, cemail: v('email').toLowerCase(), prof: b.profile, entrega: b.entrega, recogida: b.recogida, term: b.termEntrega, termRec: b.termRecogida, vuelo: b.vuelo, placa: b.placa, modelo: b.modelo, total: b.total, pay: payText(), extras: b.extras.map(x => x.name).join(', '), rating: 0, comment: '', done: false });
+                put('atl_bk', bk);
+                $('rCode').textContent = b.code;
+                $('rData').innerHTML = grid(items().concat([['Método de pago', payText()]]));
+                r.quote.ex = r.quote.extras; $('rPrice').innerHTML = priceHTML(r.quote);
+                $('wz').style.display = 'none'; $('receipt').style.display = 'block'; window.scrollTo(0, 100);
+                if (r.payment && r.payment.url) location.href = r.payment.url; // pasarela de pago (cuando esté activa)
+            } catch (e) { setErr($('pPay'), e.message); }
+            finally { btn.disabled = false; btn.textContent = 'Pagar y confirmar ✓'; }
+        };
+        // Al volver a la reserva tras confirmar, se reinicia el asistente
+        addEventListener('hashchange', () => { if (location.hash === '#reserva' && $('receipt').style.display === 'block') { $('receipt').style.display = 'none'; $('wz').style.display = ''; document.querySelectorAll('input').forEach(i => i.value = ''); PAY = ''; renderPay(); EXT.clear(); renderExtras(); TERM2 = ''; pills('pTerm2', P.terminals.map(t => [t, t]), '', x => { TERM2 = x; setErr($('pTerm2'), ''); }); TERM = ''; pills('pTerm', P.terminals.map(t => [t, t]), '', x => { TERM = x; setErr($('pTerm'), ''); }); go(0); } });
+        /* ---------- Servicios adicionales ---------- */
+        const EXT = new Set(), exSel = () => P.extras.filter(x => EXT.has(x.id));
+        function renderExtras() { $('xtras').innerHTML = P.extras.map(x => '<button type="button" class="xt' + (EXT.has(x.id) ? ' on' : '') + '" data-id="' + x.id + '"><i>' + x.icon + '</i><span>' + esc(x.name) + '<small>' + esc(x.desc || '') + '</small></span><b>+' + money(x.price) + '</b></button>').join(''); }
+        $('xtras').onclick = e => { const b = e.target.closest('.xt'); if (!b) return; const id = b.dataset.id; EXT.has(id) ? EXT.delete(id) : EXT.add(id); b.classList.toggle('on', EXT.has(id)); refreshQuote(); };
+        $('brandSub').textContent = P.place;
+        $('dayInfo').textContent = ATALAYA_CONFIG.billingMode === 'day' ? '💶 La tarifa se cobra por día (24 h) iniciado: ' + money(P.rates.day) + ' por día.' : '💶 Se aplica automáticamente la mejor tarifa (hora, día, semana o mes).';
+        $('xStrip').textContent = 'Servicios adicionales: ' + P.extras.map(x => x.name + ' (' + money(x.price) + ')').join(' · ');
+
+        /* ---------- Métodos de pago (según el país activo; simulación) ---------- */
+        let PAY = '';
+        const PM = () => P.payments.find(m => m.id === PAY);
+        $('payStrip').textContent = 'Medios de pago: ' + P.payments.map(m => m.name).join(' · ');
+        function renderPay() {
+            pills('pPay', P.payments.map(m => [m.id, m.icon + ' ' + m.name]), PAY, x => { PAY = x; setErr($('pPay'), ''); payFields(); });
+            payFields();
+        }
+        function payFields() {
+            const m = PM(), fld = (id, lab, ph, ex) => '<div class="f"><label for="' + id + '">' + lab + '</label><input id="' + id + '" placeholder="' + ph + '" ' + (ex || '') + '><small class="msg"></small></div>';
+            $('payF').innerHTML = !m ? '' : m.kind === 'card'
+                ? fld('pNom', 'Nombre del titular', 'Como aparece en la tarjeta', 'autocomplete="cc-name"') + fld('pNum', 'Número de tarjeta', '4242 4242 4242 4242', 'inputmode="numeric" maxlength="23" autocomplete="cc-number"')
+                + '<div class="rw">' + fld('pExp', 'Vencimiento', 'MM/AA', 'inputmode="numeric" maxlength="5"') + fld('pCvv', 'CVV', '123', 'type="password" inputmode="numeric" maxlength="4"') + '</div>'
+                : m.kind === 'bank' ? '<div class="f"><label for="pBank">Banco</label><select id="pBank"><option value="">Selecciona tu banco…</option>' + m.banks.map(b => '<option>' + esc(b) + '</option>').join('') + '</select><small class="msg"></small></div>'
+                    : m.kind === 'phone' ? fld('pTelP', 'Número de celular', P.phone, 'inputmode="tel"')
+                        : m.kind === 'email' ? fld('pMail', 'Correo de tu cuenta', 'tucorreo@ejemplo.com', 'type="email"')
+                            : '<p class="mu">' + esc(m.note || '') + '</p>' + (m.accounts || []).map(a => '<div class="ln"><span>' + esc(a.bank) + '<br><small class="mu">' + esc(a.holder) + '</small></span><b>' + esc(a.iban) + '</b></div>').join('');
+        }
+        $('payF').addEventListener('input', e => {
+            const t = e.target;
+            if (t.id === 'pNum') t.value = t.value.replace(/\D/g, '').slice(0, 19).replace(/(.{4})/g, '$1 ').trim();
+            if (t.id === 'pExp') { const d = t.value.replace(/\D/g, '').slice(0, 4); t.value = d.length > 2 ? d.slice(0, 2) + '/' + d.slice(2) : d; }
+        });
+        function validatePay() {
+            const m = PM(); let ok = true, first = null;
+            const chk = (el, msg) => { if (!setErr(el, msg)) { ok = false; first = first || el; } };
+            chk($('pPay'), m ? '' : 'Selecciona un método de pago.');
+            if (m) {
+                if (m.kind === 'card') {
+                    const ex = $('pExp').value, mm = +ex.slice(0, 2), yy = +ex.slice(3), yr = new Date().getFullYear() % 100, mo = new Date().getMonth() + 1;
+                    chk($('pNom'), $('pNom').value.trim().length < 3 ? 'Ingresa el nombre del titular.' : '');
+                    chk($('pNum'), $('pNum').value.replace(/\D/g, '').length < 13 ? 'Número de tarjeta no válido.' : '');
+                    chk($('pExp'), !/^\d{2}\/\d{2}$/.test(ex) || mm < 1 || mm > 12 || yy < yr || (yy === yr && mm < mo) ? 'Fecha no válida.' : '');
+                    chk($('pCvv'), /^\d{3,4}$/.test($('pCvv').value) ? '' : 'CVV no válido.');
+                } else if (m.kind === 'bank') chk($('pBank'), $('pBank').value ? '' : 'Selecciona tu banco.');
+                else if (m.kind === 'phone') chk($('pTelP'), $('pTelP').value.replace(/\D/g, '').length < 7 ? 'Número no válido.' : '');
+                else if (m.kind === 'email') chk($('pMail'), /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('pMail').value.trim()) ? '' : 'Correo no válido.');
+            }
+            if (first && first.focus) first.focus();
+            return ok;
+        }
+        // Solo se guarda el nombre del método y un dato enmascarado (nunca la tarjeta completa ni el CVV)
+        function payText() {
+            const m = PM(); if (!m) return '—';
+            return m.name + (m.kind === 'card' ? ' •••• ' + $('pNum').value.replace(/\D/g, '').slice(-4) : m.kind === 'bank' ? ' · ' + $('pBank').value : m.kind === 'phone' ? ' · ' + $('pTelP').value.trim() : m.kind === 'email' ? ' · ' + $('pMail').value.trim() : '');
+        }
+
+        /* ---------- Cuentas y reservas (DEMO: se guardan en este navegador con localStorage) ---------- */
+        const ld = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
+        const put = (k, x) => { try { localStorage.setItem(k, JSON.stringify(x)); } catch (e) { } };
+        const hash = async t => { try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); } catch (e) { return btoa(unescape(encodeURIComponent(t))); } };
+        const me = () => { const e = ld('atl_ses', null); return e ? ld('atl_users', []).find(u => u.email === e) || null : null; };
+        let PEND = false, MODE = 'in';
+
+        function renderNav() {
+            $('navAcc').innerHTML = me() ? '<a href="#reservas">Mis reservas</a><a href="#" id="out">Salir</a>' : '<a href="#ingresar">Ingresar</a>';
+            const o = $('out');
+            if (o) o.onclick = e => { e.preventDefault(); try { localStorage.removeItem('atl_ses'); } catch (x) { } renderNav(); location.hash === '#inicio' ? route() : location.hash = 'inicio'; };
+        }
+        function authMode(m) {
+            MODE = m;
+            document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.m === m));
+            document.querySelectorAll('.rgo').forEach(x => x.style.display = m === 'up' ? '' : 'none');
+            $('aBtn').textContent = m === 'up' ? 'Crear cuenta' : 'Ingresar';
+            $('aPass').autocomplete = m === 'up' ? 'new-password' : 'current-password';
+        }
+        document.querySelector('.tabs').onclick = e => { const t = e.target.closest('.tab'); if (t) authMode(t.dataset.m); };
+        $('aForm').onsubmit = async e => {
+            e.preventDefault();
+            const em = $('aEmail').value.trim().toLowerCase(), pw = $('aPass').value, U = ld('atl_users', []); let ok = true;
+            const bad = (id, m) => { setErr($(id), m); if (m) ok = false; };
+            bad('aEmail', /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em) ? '' : 'Correo no válido.');
+            bad('aPass', pw.length < 6 ? 'Mínimo 6 caracteres.' : '');
+            if (MODE === 'up') { bad('aNombre', $('aNombre').value.trim().length < 3 ? 'Ingresa tu nombre completo.' : ''); bad('aTel', $('aTel').value.replace(/\D/g, '').length < 7 ? 'Teléfono no válido.' : ''); }
+            if (!ok) return;
+            const h = await hash(pw); let u = U.find(x => x.email === em);
+            if (MODE === 'up') {
+                if (u) return setErr($('aEmail'), 'Ya existe una cuenta con este correo.');
+                U.push({ email: em, nombre: $('aNombre').value.trim(), tel: $('aTel').value.trim(), h }); put('atl_users', U);
+            } else if (!u || u.h !== h) return setErr($('aPass'), 'Correo o contraseña incorrectos.');
+            put('atl_ses', em); $('aForm').reset(); renderNav();
+            const back = PEND; PEND = false; location.hash = back ? 'reserva' : 'reservas';
+        };
+
+        // Estado de la reserva según fecha/hora (o marcada como finalizada en la demo)
+        const stat = b => b.done || nowLocal() >= b.recogida ? 3 : nowLocal() >= b.entrega ? 2 : 1;
+        const STX = ['', 'Próxima', 'En curso', 'Finalizada'];
+        const tchg = (b, pp) => '<div class="f" style="margin:0 0 12px"><label>Cambiar terminal de recogida</label><div class="pills tchg" data-c="' + b.code + '">' + pp.terminals.map(t => '<button type="button" class="pill' + (t === (b.termRec || b.term) ? ' on' : '') + '" data-v="' + esc(t) + '">' + esc(t) + '</button>').join('') + '</div><small class="msg" style="color:var(--ok)"></small></div>';
+        function renderBk() {
+            const u = me(), L = ld('atl_bk', []).filter(b => b.email === u.email).reverse();
+            $('bkTitle').textContent = 'Hola, ' + u.nombre.split(' ')[0] + ' · Mis reservas';
+            $('bkList').innerHTML = !L.length ? '<div class="pan" style="text-align:center"><p>Aún no tienes reservas.</p><a class="btn" href="#reserva">Reservar ahora</a></div>' : L.map(b => {
+                const st = stat(b), pp = ATALAYA_CONFIG.profiles[b.prof] || P; let ex;
+                if (st < 3) ex = tchg(b, pp) + (ATALAYA_CONFIG.demo ? '<button class="btn sm lt fin" data-c="' + b.code + '" type="button">Marcar como finalizada (demo)</button>' : '');
+                else if (b.rating) ex = '<div class="stars ro">' + [1, 2, 3, 4, 5].map(i => '<span class="star' + (i <= b.rating ? ' on' : '') + '">★</span>').join('') + '</div>' + (b.comment ? '<p class="mu">“' + esc(b.comment) + '”</p>' : '');
+                else ex = '<div class="rate" data-c="' + b.code + '"><p class="mu" style="margin:0">¿Cómo fue tu experiencia?</p><div class="stars">' + [1, 2, 3, 4, 5].map(i => '<button type="button" class="star" data-i="' + i + '">★</button>').join('') + '</div><div class="f" style="margin:0"><input class="cm" maxlength="200" placeholder="Comentario (opcional)"><small class="msg"></small></div><button class="btn sm sbm" type="button">Enviar calificación</button></div>';
+                return '<div class="pan bkc"><div class="bkh"><b>' + esc(b.code) + '</b><span class="bg s' + st + '">' + STX[st] + '</span></div><div class="rg"><div><small>Entrega</small>' + fmtDate(b.entrega) + '</div><div><small>Recogida</small>' + fmtDate(b.recogida) + '</div><div><small>Terminal de entrega</small>' + esc(b.term) + '</div><div><small>Terminal de recogida</small><span class="tr">' + esc(b.termRec || b.term) + '</span></div><div><small>Vehículo</small>' + esc(b.modelo) + ' · ' + esc(b.placa) + '</div><div><small>Total</small>' + moneyP(b.total, pp) + '</div><div><small>Pago</small>' + esc(b.pay || '—') + '</div><div><small>Extras</small>' + esc(b.extras || 'Ninguno') + '</div></div><div style="margin-top:14px">' + ex + '</div></div>';
+            }).join('');
+        }
+        // Refresca estado, terminal y calificación desde el servidor
+        async function syncBk() {
+            const u = me(), L = ld('atl_bk', []);
+            await Promise.all(L.filter(b => b.email === u.email && b.cemail).map(async b => {
+                try {
+                    const s = (await api('/api/reservations/' + b.code + '?email=' + encodeURIComponent(b.cemail))).reservation;
+                    Object.assign(b, { termRec: s.termRecogida, rating: s.rating || 0, comment: s.comment || '', done: s.phase === 'completed' });
+                } catch (e) { }
+            }));
+            put('atl_bk', L);
+        }
+        $('bkList').onclick = async e => {
+            const t = e.target, L = ld('atl_bk', []), pl = t.closest('.tchg .pill'), st = t.closest('.star');
+            const patch = (b, body) => api('/api/reservations/' + b.code, Object.assign({ email: b.cemail }, body), 'PATCH');
+            if (pl) { // cambio de terminal de recogida
+                const box = pl.parentNode, b = L.find(x => x.code === box.dataset.c), msg = box.parentNode.querySelector('.msg');
+                try {
+                    await patch(b, { termRecogida: pl.dataset.v }); b.termRec = pl.dataset.v; put('atl_bk', L);
+                    [...box.children].forEach(x => x.classList.toggle('on', x === pl)); box.closest('.bkc').querySelector('.tr').textContent = pl.dataset.v;
+                    msg.style.color = 'var(--ok)'; msg.textContent = '✓ Terminal de recogida actualizada';
+                } catch (err) { msg.style.color = 'var(--bad)'; msg.textContent = err.message; }
+                return;
+            }
+            if (st && st.dataset.i) { const r = st.closest('.rate'); r.dataset.r = st.dataset.i; r.querySelectorAll('.star').forEach(x => x.classList.toggle('on', +x.dataset.i <= +st.dataset.i)); r.querySelector('.msg').textContent = ''; return; }
+            const sb = t.closest('.sbm');
+            if (sb) {
+                const r = sb.closest('.rate'); if (!r.dataset.r) { r.querySelector('.msg').textContent = 'Elige de 1 a 5 estrellas.'; return; }
+                const b = L.find(x => x.code === r.dataset.c), c = r.querySelector('.cm').value.trim();
+                try { await patch(b, { rating: +r.dataset.r, comment: c }); b.rating = +r.dataset.r; b.comment = c; put('atl_bk', L); renderBk(); }
+                catch (err) { r.querySelector('.msg').textContent = err.message; }
+                return;
+            }
+            const fin = t.closest('.fin');
+            if (fin) { const b = L.find(x => x.code === fin.dataset.c); try { await patch(b, { status: 'completed' }); b.done = true; put('atl_bk', L); renderBk(); } catch (err) { alert(err.message); } }
+        };
+
+        renderExtras(); renderPay(); go(0); renderNav(); route();
+    </script>
+</body>
+
+</html>
