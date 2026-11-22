@@ -1,7 +1,7 @@
-const { wrap, send } = require('../lib/http');
-const { ATALAYA_CONFIG } = require('../lib/config');
-
-module.exports = wrap(['GET'], async (req, res) => {
-    res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-    return send(res, 200, `window.ATALAYA_CONFIG = ${JSON.stringify(ATALAYA_CONFIG)};`);
-});
+// GET /config.js → window.ATALAYA_CONFIG (solo el perfil activo)
+const { publicConfig } = require('../lib/config');
+module.exports = (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=60');
+  res.status(200).send('window.ATALAYA_CONFIG=' + JSON.stringify(publicConfig()).replace(/</g, '\\u003c') + ';');
+};
