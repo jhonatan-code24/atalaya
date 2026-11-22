@@ -1224,6 +1224,248 @@
                 padding: 16px
             }
         }
+
+        .stabs {
+            max-width: 480px;
+            margin: 0 auto 16px
+        }
+
+        .stab {
+            flex: 1;
+            border: 0;
+            background: none;
+            padding: 10px;
+            font: inherit;
+            font-weight: 600;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: .3s;
+            color: var(--mu)
+        }
+
+        .stab.on {
+            background: var(--navy);
+            color: #fff
+        }
+
+        .vbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 14px
+        }
+
+        .vbar>div {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .vtabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 6px
+        }
+
+        .vt {
+            flex: 1;
+            min-width: 140px;
+            border: 1.5px solid var(--ln);
+            background: #fff;
+            border-radius: 12px;
+            padding: 12px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .25s
+        }
+
+        .vt i {
+            font-style: normal;
+            background: var(--bg);
+            border-radius: 99px;
+            padding: 2px 9px;
+            margin-left: 6px;
+            font-size: .8rem
+        }
+
+        .vt.on {
+            background: var(--navy);
+            color: #fff;
+            border-color: var(--navy)
+        }
+
+        .vt.on i {
+            background: var(--ac);
+            color: var(--navy)
+        }
+
+        .vc {
+            background: #fff;
+            border-radius: var(--r);
+            padding: 18px;
+            margin-bottom: 14px;
+            box-shadow: 0 6px 20px rgba(11, 31, 58, .08);
+            border-left: 6px solid var(--ln);
+            animation: fade .4s;
+            transition: .25s
+        }
+
+        .vc:hover {
+            transform: translateY(-3px)
+        }
+
+        .vc.urgent {
+            border-left-color: var(--bad)
+        }
+
+        .vc.mine {
+            border-left-color: var(--ac)
+        }
+
+        .vc.done {
+            opacity: .65;
+            border-left-color: var(--ok)
+        }
+
+        .vh {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px
+        }
+
+        .route {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 1.05rem
+        }
+
+        .route span {
+            color: var(--ac2)
+        }
+
+        .vg {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 18px;
+            margin: 10px 0
+        }
+
+        @media(max-width:560px) {
+            .vg {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .vg small {
+            display: block;
+            color: var(--mu);
+            font-size: .72rem;
+            text-transform: uppercase
+        }
+
+        .note {
+            background: #fff6e2;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: .88rem;
+            margin: 8px 0
+        }
+
+        .note.ok {
+            background: #effaf5
+        }
+
+        .chips span {
+            display: inline-block;
+            background: var(--bg);
+            border-radius: 99px;
+            padding: 3px 10px;
+            font-size: .8rem;
+            margin: 2px 4px 2px 0
+        }
+
+        .cl {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .acts2 {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px
+        }
+
+        .acts2 .btn {
+            flex: 1;
+            min-width: 150px
+        }
+
+        .sgs {
+            display: flex;
+            gap: 6px;
+            margin: 8px 0
+        }
+
+        .sgs span {
+            flex: 1;
+            text-align: center;
+            font-size: .74rem;
+            padding: 6px 4px;
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--mu)
+        }
+
+        .sgs .on {
+            background: var(--ac);
+            color: var(--navy);
+            font-weight: 700
+        }
+
+        .sgs .dn {
+            background: #dcf5ea;
+            color: var(--ok)
+        }
+
+        .urg {
+            color: var(--bad);
+            font-weight: 700;
+            font-size: .8rem
+        }
+
+        #toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translate(-50%, 80px);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            opacity: 0;
+            transition: .4s;
+            z-index: 99;
+            max-width: 90%
+        }
+
+        #toast.on {
+            opacity: 1;
+            transform: translate(-50%, 0)
+        }
     </style>
 </head>
 
@@ -1237,7 +1479,8 @@
                         id="brandSub"></small></span></a>
             <div class="lk"><a href="#servicios">Servicios</a><a href="#como">Cómo funciona</a><a
                     href="#tarifas">Tarifas</a><a href="#faq">Preguntas</a></div>
-            <div class="rg2"><span class="na" id="navAcc"></span><a class="btn sm" href="#reserva">Reservar</a></div>
+            <div class="rg2"><span class="na"><a href="#valet">🧑‍✈️ Valet</a></span><span class="na"
+                    id="navAcc"></span><a class="btn sm" href="#reserva">Reservar</a></div>
         </div>
     </nav>
 
@@ -1252,7 +1495,8 @@
                     <h1 id="hTitle"></h1>
                     <p id="hText"></p>
                     <div class="cta2"><a class="btn" href="#reserva">Reservar ahora →</a><a class="btn gh"
-                            href="#como">Cómo funciona</a></div>
+                            href="#como">Cómo
+                            funciona</a></div>
                     <div class="stats" id="stats"></div>
                 </div>
                 <div class="hc">
@@ -1330,7 +1574,8 @@
                             <div class="rw">
                                 <div class="f"><label for="entrega">Entrega del vehículo <span>(recibe
                                             Valetexpress)</span></label><input id="entrega" type="datetime-local"><small
-                                        class="msg"></small></div>
+                                        class="msg"></small>
+                                </div>
                                 <div class="f"><label for="recogida">Recogida <span>(entrega
                                             Valetexpress)</span></label><input id="recogida"
                                         type="datetime-local"><small class="msg"></small></div>
@@ -1339,7 +1584,8 @@
                                 <div class="pills" id="pTerm"></div><small class="msg"></small>
                             </div>
                             <div class="f"><label>Punto de encuentro para la recogida <span>(podrás cambiarlo cuando
-                                        quieras en “Mis reservas”)</span></label>
+                                        quieras en “Mis
+                                        reservas”)</span></label>
                                 <div class="pills" id="pTerm2"></div><small class="msg"></small>
                             </div>
                             <div class="f"><label for="vuelo">Número de vuelo <span>(opcional)</span></label><input
@@ -1383,7 +1629,8 @@
                 <div class="rg" id="rData"></div>
                 <div id="rPrice" style="margin-top:16px"></div>
                 <p class="mu" style="margin-top:12px">ℹ️ Puedes cambiar la terminal de recogida cuando quieras desde
-                    “Mis reservas”.</p>
+                    “Mis
+                    reservas”.</p>
                 <div class="nav2 acts"><button class="btn dk" onclick="window.print()">Imprimir</button><a
                         class="btn dk" href="#reservas">Mis reservas</a><a class="btn" href="#inicio">Volver al
                         inicio</a></div>
@@ -1432,6 +1679,43 @@
             <div id="bkList"></div>
         </div>
     </div>
+
+    <!-- ================= PORTAL DE VALETS / ADMIN ================= -->
+    <div id="v-valet" class="view">
+        <div class="rh">
+            <div class="wrap">
+                <h2 id="vTitle">Portal de valets</h2>
+                <p>Consulta las reservas, tómalas y atiende al cliente.</p>
+            </div>
+        </div>
+        <div class="wrap bk">
+            <form class="pan" id="sForm" novalidate style="max-width:480px;margin:0 auto">
+                <div class="tabs stabs"><button type="button" class="stab on" data-m="in">Ingresar</button><button
+                        type="button" class="stab" data-m="up">Solicitar cuenta</button></div>
+                <p class="mu" id="sNote"></p>
+                <div class="f sgo" style="display:none"><label for="sNombre">Nombre completo</label><input id="sNombre"
+                        autocomplete="name"><small class="msg"></small></div>
+                <div class="f"><label for="sEmail">Correo electrónico</label><input id="sEmail" type="email"
+                        autocomplete="email"><small class="msg"></small></div>
+                <div class="f sgo" style="display:none"><label for="sTel">Teléfono / WhatsApp</label><input id="sTel"
+                        type="tel"><small class="msg"></small></div>
+                <div class="f"><label for="sPass">Contraseña</label><input id="sPass" type="password"
+                        autocomplete="current-password"><small class="msg"></small></div>
+                <button class="btn" id="sBtn" style="width:100%">Ingresar</button>
+            </form>
+            <div id="sDash" style="display:none">
+                <div class="vbar">
+                    <div><b id="dName"></b><span class="bg s1" id="dRole"></span></div>
+                    <div><button class="btn sm lt" id="dRef" type="button">↻ Actualizar</button><button
+                            class="btn sm dk" id="dOut" type="button">Salir</button></div>
+                </div>
+                <div class="vtabs" id="dTabs"></div>
+                <div class="pills" id="dFil" style="margin:12px 0"></div>
+                <div id="dList"></div>
+            </div>
+        </div>
+    </div>
+    <div id="toast"></div>
 
     <footer id="foot"></footer>
 
@@ -1486,14 +1770,15 @@
 
         /* ---------- Navegación (#inicio, #reserva, #servicios...) ---------- */
         function route() {
-            const h = location.hash.slice(1) || 'inicio', V = { reserva: 'v-reserva', ingresar: 'v-ingresar', reservas: 'v-reservas' }, cur = V[h] || 'v-inicio';
+            const h = location.hash.slice(1) || 'inicio', V = { reserva: 'v-reserva', ingresar: 'v-ingresar', reservas: 'v-reservas', valet: 'v-valet' }, cur = V[h] || 'v-inicio';
             if (h === 'reservas' && !me()) { location.hash = 'ingresar'; return; }
             if (h === 'ingresar' && me()) { location.hash = 'reservas'; return; }
-            ['v-inicio', 'v-reserva', 'v-ingresar', 'v-reservas'].forEach(i => $(i).classList.toggle('on', i === cur));
+            ['v-inicio', 'v-reserva', 'v-ingresar', 'v-reservas', 'v-valet'].forEach(i => $(i).classList.toggle('on', i === cur));
             if (h === 'reserva') {
                 const u = me(); if (u) { if (!v('nombre')) $('nombre').value = u.nombre; if (!v('email')) $('email').value = u.email; if (!v('tel')) $('tel').value = u.tel; }
                 setMin(); refreshQuote(); window.scrollTo(0, 0);
             } else if (h === 'reservas') { renderBk(); syncBk().then(renderBk); window.scrollTo(0, 0); }
+            else if (h === 'valet') { initValet(); window.scrollTo(0, 0); }
             else if (h === 'ingresar') { $('aNote').textContent = PEND ? 'Inicia sesión o crea tu cuenta para confirmar tu reserva. Tus datos se conservan.' : ''; window.scrollTo(0, 0); }
             else if (['servicios', 'como', 'tarifas', 'faq'].includes(h)) $(h).scrollIntoView({ behavior: 'smooth' });
             else { window.scrollTo(0, 0); counters(); }
@@ -1751,6 +2036,106 @@
             }
             const fin = t.closest('.fin');
             if (fin) { const b = L.find(x => x.code === fin.dataset.c); try { await patch(b, { status: 'completed' }); b.done = true; put('atl_bk', L); renderBk(); } catch (err) { alert(err.message); } }
+        };
+
+        /* ---------- Portal de valets y administración (sesión en el servidor) ---------- */
+        let SMODE = 'in', ST = null, TAB = 'open', FIL = '', DATA = {}, STAFF = [], TIMER = null;
+        const toast = (m, ok) => { const t = $('toast'); t.textContent = m; t.style.background = ok ? 'var(--ok)' : 'var(--bad)'; t.classList.add('on'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), 3200); };
+        const dl = v => {
+            const d = v.slice(0, 10), t = nowLocal().slice(0, 10), tm = new Date(ms(t + 'T00:00') + 864e5).toISOString().slice(0, 10);
+            return (d === t ? 'Hoy' : d === tm ? 'Mañana' : new Intl.DateTimeFormat(P.locale, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(ms(v)))) + ' · ' + v.slice(11);
+        };
+        const soon = v => (ms(v) - ms(nowLocal())) / 60000 < 120; // entrega en menos de 2 h (o atrasada)
+        const STG = { open: ['Disponible', 1], assigned: ['Asignada', 2], received: ['Vehículo recibido', 2], returned: ['Entregada', 3] };
+        const EMPTY = { open: '🎉 No hay reservas disponibles por ahora. Esta lista se actualiza sola.', mine: 'Aún no has tomado reservas. Ve a “Disponibles”.', all: 'Todavía no hay reservas.' };
+
+        async function initValet() {
+            try { ST = await api('/api/staff'); } catch (e) { ST = null; }
+            $('sForm').style.display = ST ? 'none' : ''; $('sDash').style.display = ST ? '' : 'none';
+            clearInterval(TIMER);
+            if (!ST) { $('vTitle').textContent = 'Portal de valets'; return; }
+            $('vTitle').textContent = 'Hola, ' + ST.name.split(' ')[0];
+            $('dName').textContent = ST.name + ' '; $('dRole').textContent = ST.role === 'admin' ? 'Administrador' : 'Valet';
+            TAB = ST.role === 'admin' ? 'all' : 'open'; FIL = '';
+            await loadTab();
+            TIMER = setInterval(() => location.hash === '#valet' && loadTab(true), 30000); // se actualiza cada 30 s
+        }
+        async function loadTab(silent) {
+            try {
+                if (ST.role === 'admin') { const r = await Promise.all([api('/api/work'), api('/api/admin')]); DATA = r[0]; STAFF = r[1].staff; }
+                else DATA = await api('/api/work');
+                renderDash();
+            } catch (e) {
+                if (/Inicia sesión|autorizado/.test(e.message)) { toast(e.message); initValet(); } else if (!silent) toast(e.message);
+            }
+        }
+        function renderDash() {
+            const adm = ST.role === 'admin', pend = adm ? STAFF.filter(s => s.status === 'pending').length : 0;
+            const tabs = adm ? [['all', 'Reservas', DATA.all.length], ['staff', 'Valets', pend ? pend + ' por aprobar' : STAFF.length]]
+                : [['open', 'Disponibles', DATA.open.length], ['mine', 'Mis reservas', DATA.mine.filter(r => r.stage !== 'returned').length]];
+            $('dTabs').innerHTML = tabs.map(t => '<button class="vt' + (t[0] === TAB ? ' on' : '') + '" data-t="' + t[0] + '">' + t[1] + ' <i>' + t[2] + '</i></button>').join('');
+            const lst = TAB === 'staff' ? null : DATA[TAB];
+            $('dFil').style.display = lst ? '' : 'none';
+            if (!lst) { $('dList').innerHTML = STAFF.length ? STAFF.map(staffHTML).join('') : '<div class="pan" style="text-align:center;color:var(--mu)">Aún no hay solicitudes de valets.</div>'; return; }
+            pills('dFil', [['', 'Todas las terminales']].concat(P.terminals.map(t => [t, t])), FIL, v => { FIL = v; renderDash(); });
+            const rows = lst.filter(r => !FIL || r.termEntrega === FIL || r.termRecogida === FIL);
+            $('dList').innerHTML = rows.length ? rows.map(cardHTML).join('') : '<div class="pan" style="text-align:center;color:var(--mu)">' + EMPTY[TAB] + '</div>';
+        }
+        function cardHTML(r) {
+            const adm = ST.role === 'admin', st = r.stage, urgent = st === 'open' && soon(r.entrega), B = (a, t, cls) => '<button class="btn ' + (cls || '') + '" data-a="' + a + '" data-c="' + esc(r.code) + '" type="button">' + t + '</button>';
+            const pay = r.paymentMethod === 'cash' && r.paymentStatus !== 'paid' ? '<div class="note">💵 Cobrar en el aparcamiento: <b>' + moneyP(r.total, P) + '</b></div>' : r.paymentStatus === 'paid' ? '<div class="note ok">✅ Pagada</div>' : '';
+            const idx = { assigned: 0, received: 1, returned: 3 }[st];
+            const steps = idx === undefined ? '' : '<div class="sgs">' + ['1 · Asignada', '2 · Vehículo recibido', '3 · Entregado'].map((x, i) => '<span class="' + (i < idx ? 'dn' : i === idx ? 'on' : '') + '">' + x + '</span>').join('') + '</div>';
+            const cl = r.cliente ? '<div class="cl"><div><b>' + esc(r.cliente) + '</b><br><span class="mu">' + esc(r.placa) + ' · ' + esc(r.telefono) + '</span></div><div class="acts2" style="margin:0"><a class="btn sm" style="background:#25d366;color:#fff" target="_blank" rel="noopener" href="https://wa.me/' + String(r.telefono).replace(/\D/g, '') + '">WhatsApp</a><a class="btn sm lt" href="tel:' + esc(r.telefono) + '">Llamar</a></div></div>' : '';
+            let act = '';
+            if (adm) act = (st === 'assigned' || st === 'received') ? B('release', 'Liberar reserva', 'lt') : '';
+            else if (st === 'open') act = B('take', '✋ Tomar reserva');
+            else if (st === 'assigned') act = B('received', '🚗 Marcar vehículo recibido') + B('release', 'Liberar', 'lt');
+            else if (st === 'received') act = B('returned', '✅ Marcar entregado al cliente');
+            return '<div class="vc ' + (urgent ? 'urgent' : st === 'returned' ? 'done' : st !== 'open' ? 'mine' : '') + '"><div class="vh"><div class="route"><b>' + esc(r.termEntrega) + '</b><span>→</span><b>' + esc(r.termRecogida) + '</b></div><span class="bg s' + STG[st][1] + '">' + STG[st][0] + '</span></div>'
+                + (urgent ? '<div class="urg">⚡ Entrega en menos de 2 horas</div>' : '') + steps
+                + '<div class="vg"><div><small>Entrega</small>' + dl(r.entrega) + '</div><div><small>Recogida</small>' + dl(r.recogida) + '</div><div><small>Vehículo</small>' + esc(r.modelo) + '</div><div><small>Vuelo</small>' + esc(r.vuelo || '—') + '</div></div>'
+                + (r.extras.length ? '<div class="chips">' + r.extras.map(x => '<span>' + esc(x.name) + '</span>').join('') + '</div>' : '') + pay + cl
+                + (adm && r.valet ? '<div class="mu">Valet: <b>' + esc(r.valet) + '</b> · ' + esc(r.code) + (r.cliente ? '' : '') + '</div>' : '') + (act ? '<div class="acts2">' + act + '</div>' : '') + '</div>';
+        }
+        function staffHTML(s) {
+            const B = (a, t, cls) => '<button class="btn sm ' + (cls || '') + '" data-a="' + a + '" data-s="' + s.id + '" type="button">' + t + '</button>';
+            const lab = { pending: ['Pendiente', 2], approved: ['Aprobado', 3], rejected: ['Rechazado', 1], suspended: ['Suspendido', 1] }[s.status];
+            const act = s.status === 'pending' ? B('approve', '✔ Aprobar') + B('reject', 'Rechazar', 'lt') : s.status === 'approved' ? B('suspend', 'Suspender', 'lt') : s.status === 'suspended' ? B('reactivate', 'Reactivar') : B('approve', 'Aprobar');
+            return '<div class="vc ' + (s.status === 'pending' ? 'mine' : '') + '"><div class="vh"><b>' + esc(s.name) + '</b><span class="bg s' + lab[1] + '">' + lab[0] + '</span></div><div class="mu">' + esc(s.email) + ' · ' + esc(s.phone) + '</div><div class="acts2">' + act + '</div></div>';
+        }
+        $('dTabs').onclick = e => { const t = e.target.closest('.vt'); if (t) { TAB = t.dataset.t; renderDash(); } };
+        $('dRef').onclick = () => loadTab();
+        $('dOut').onclick = async () => { try { await api('/api/staff', { action: 'logout' }); } catch (e) { } ST = null; initValet(); };
+        $('dList').onclick = async e => {
+            const b = e.target.closest('button[data-a]'); if (!b) return;
+            const a = b.dataset.a; if (['release', 'reject', 'suspend'].includes(a) && !confirm('¿Confirmas esta acción?')) return;
+            b.disabled = true;
+            try { await (b.dataset.s ? api('/api/admin', { action: a, id: b.dataset.s }) : api('/api/work', { action: a, code: b.dataset.c })); toast('✓ Listo', true); }
+            catch (err) { toast(err.message); }
+            await loadTab(true);
+        };
+        function sMode(m) {
+            SMODE = m; document.querySelectorAll('.stab').forEach(t => t.classList.toggle('on', t.dataset.m === m));
+            document.querySelectorAll('.sgo').forEach(x => x.style.display = m === 'up' ? '' : 'none');
+            $('sBtn').textContent = m === 'up' ? 'Solicitar cuenta de valet' : 'Ingresar';
+            $('sPass').autocomplete = m === 'up' ? 'new-password' : 'current-password';
+            $('sNote').style.color = ''; $('sNote').textContent = m === 'up' ? 'Un administrador debe aprobar tu cuenta antes de que puedas ingresar.' : '';
+        }
+        document.querySelector('.stabs').onclick = e => { const t = e.target.closest('.stab'); if (t) sMode(t.dataset.m); };
+        $('sForm').onsubmit = async e => {
+            e.preventDefault(); let ok = true;
+            const bad = (id, m) => { setErr($(id), m); if (m) ok = false; }, em = $('sEmail').value.trim().toLowerCase(), pw = $('sPass').value, up = SMODE === 'up';
+            bad('sEmail', /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em) ? '' : 'Correo no válido.');
+            bad('sPass', up && pw.length < 8 ? 'Mínimo 8 caracteres.' : !pw ? 'Ingresa tu contraseña.' : '');
+            if (up) { bad('sNombre', $('sNombre').value.trim().length < 3 ? 'Ingresa tu nombre completo.' : ''); bad('sTel', $('sTel').value.replace(/\D/g, '').length < 7 ? 'Teléfono no válido.' : ''); }
+            if (!ok) return;
+            const btn = $('sBtn'); btn.disabled = true;
+            try {
+                if (up) { const r = await api('/api/staff', { action: 'register', name: $('sNombre').value.trim(), email: em, phone: $('sTel').value.trim(), password: pw }); $('sForm').reset(); sMode('in'); $('sNote').style.color = 'var(--ok)'; $('sNote').textContent = '✅ ' + r.message; }
+                else { await api('/api/staff', { action: 'login', email: em, password: pw }); $('sForm').reset(); await initValet(); }
+            } catch (err) { setErr($('sPass'), err.message); }
+            finally { btn.disabled = false; }
         };
 
         renderExtras(); renderPay(); go(0); renderNav(); route();
