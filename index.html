@@ -1631,6 +1631,7 @@
                 <h2 style="text-align:center;margin:0">¡Reserva confirmada!</h2>
                 <p class="mu" style="text-align:center;margin:4px 0">Presenta tu código al valet · Pagas en el
                     aparcamiento</p>
+                <p class="mu" id="rMail" style="text-align:center;margin:4px 0"></p>
                 <span class="code" id="rCode"></span>
                 <div class="rg" id="rData"></div>
                 <div id="rPrice" style="margin-top:16px"></div>
@@ -1904,6 +1905,7 @@
                 bk.push({ code: b.code, email: u ? u.email : '', cemail: v('email').toLowerCase(), prof: b.profile, entrega: b.entrega, recogida: b.recogida, term: b.termEntrega, termRec: b.termRecogida, vuelo: b.vuelo, placa: b.placa, modelo: b.modelo, parking: b.parking, total: b.total, pay: payText(), extras: b.extras.map(x => x.name).join(', '), rating: 0, comment: '', done: false });
                 put('atl_bk', bk);
                 $('rCode').textContent = b.code;
+                $('rMail').textContent = r.emailSent ? '📧 Te enviamos la confirmación a ' + v('email') + ' (revisa también la carpeta de spam).' : '';
                 $('rData').innerHTML = grid(items().concat([['Método de pago', payText()]]));
                 r.quote.ex = r.quote.extras; $('rPrice').innerHTML = priceHTML(r.quote);
                 $('wz').style.display = 'none'; $('receipt').style.display = 'block'; window.scrollTo(0, 100);

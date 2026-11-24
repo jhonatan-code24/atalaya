@@ -6,6 +6,7 @@ const { parseReservation } = require('../../lib/validate');
 const R = require('../../lib/reservations');
 const { createCheckout } = require('../../lib/payments');
 const { notifyN8n } = require('../../lib/n8n');
+const { sendConfirmation } = require('../../lib/email');
 
 module.exports = wrap(['POST'], async (req, res) => {
     const p = active(), d = parseReservation(p, req.body);
@@ -20,6 +21,8 @@ module.exports = wrap(['POST'], async (req, res) => {
         if (payment) await R.setPayment(row.code, payment.provider, payment.ref);
     } catch (e) { console.error('checkout:', e.message); }
 
-    if (await notifyN8n('reservation.created', R.full(row))) await R.markNotified(row.code);
-    send(res, 201, { reservation: R.dto(row), quote: q, payment });
+    // Correo de confirmación + aviso a n8n en paralelo (ninguno cancela la reserva si falla)
+    const [n8nOk, emailSent] = await Promise.all([notifyN8n('reservation.created', R.full(row)), sendConfirmation(row, p)]);
+    if (n8nOk) await R.markNotified(row.code);
+    send(res, 201, { reservation: R.dto(row), quote: q, payment, emailSent });
 });
