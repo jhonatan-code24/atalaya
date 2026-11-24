@@ -35,7 +35,7 @@ module.exports = wrap(['GET', 'POST'], async (req, res) => {
         take: [`update reservations set assigned_to = $2::uuid, stage = 'assigned', assigned_at = now(), updated_at = now() where code = $1 and stage = 'open' and status in ('confirmed','pending') returning ${R.COLS}`, [code, me]],
         release: [`update reservations set assigned_to = null, stage = 'open', assigned_at = null, updated_at = now() where code = $1 and stage in ('assigned','received') and ($3::boolean or (assigned_to = $2::uuid and stage = 'assigned')) returning ${R.COLS}`, [code, me, adm]],
         received: [`update reservations set stage = 'received', updated_at = now() where code = $1 and stage = 'assigned' and assigned_to = $2::uuid returning ${R.COLS}`, [code, me]],
-        returned: [`update reservations set stage = 'returned', status = 'completed', updated_at = now() where code = $1 and stage = 'received' and assigned_to = $2::uuid returning ${R.COLS}`, [code, me]]
+        returned: [`update reservations set stage = 'returned', status = 'completed', payment_status = case when payment_method = 'cash' then 'paid' else payment_status end, paid_at = case when payment_method = 'cash' then now() else paid_at end, updated_at = now() where code = $1 and stage = 'received' and assigned_to = $2::uuid returning ${R.COLS}`, [code, me]]
     };
     if (!Q[action]) throw new HttpError(400, 'Acción no válida.');
     if (adm && action !== 'release') throw new HttpError(403, 'El administrador solo puede liberar reservas.');

@@ -1466,6 +1466,14 @@
             opacity: 1;
             transform: translate(-50%, 0)
         }
+
+        .fv {
+            display: inline-block;
+            margin-top: 14px;
+            font-size: .74rem;
+            color: #6f819f;
+            text-decoration: underline
+        }
     </style>
 </head>
 
@@ -1479,8 +1487,7 @@
                         id="brandSub"></small></span></a>
             <div class="lk"><a href="#servicios">Servicios</a><a href="#como">Cómo funciona</a><a
                     href="#tarifas">Tarifas</a><a href="#faq">Preguntas</a></div>
-            <div class="rg2"><span class="na"><a href="#valet">🧑‍✈️ Valet</a></span><span class="na"
-                    id="navAcc"></span><a class="btn sm" href="#reserva">Reservar</a></div>
+            <div class="rg2"><span class="na" id="navAcc"></span><a class="btn sm" href="#reserva">Reservar</a></div>
         </div>
     </nav>
 
@@ -1495,8 +1502,7 @@
                     <h1 id="hTitle"></h1>
                     <p id="hText"></p>
                     <div class="cta2"><a class="btn" href="#reserva">Reservar ahora →</a><a class="btn gh"
-                            href="#como">Cómo
-                            funciona</a></div>
+                            href="#como">Cómo funciona</a></div>
                     <div class="stats" id="stats"></div>
                 </div>
                 <div class="hc">
@@ -1504,7 +1510,7 @@
                     <div class="road"><span class="car">🚗</span></div>
                     <div class="mu">Desde</div>
                     <div class="pr" id="hFrom"></div>
-                    <div class="mu">por día · reserva en minutos</div>
+                    <div class="mu">el primer día · reserva en minutos</div>
                 </div>
             </div>
         </header>
@@ -1521,9 +1527,10 @@
             </div>
         </section>
         <section id="tarifas" class="sec wrap">
-            <h2 class="st rv">Tarifa por día</h2>
-            <p class="ss rv">Pagas por cada día (24 h) de tu viaje. Precios con IVA incluido.</p>
-            <div class="g4" id="rts" style="max-width:320px;margin:0 auto"></div>
+            <h2 class="st rv">Tarifas por día</h2>
+            <p class="ss rv">Cada día es de 24 h: el primer día tiene su precio y cada día adicional suma un poco más.
+                IVA incluido.</p>
+            <div class="g4" id="rts" style="max-width:760px;margin:0 auto"></div>
             <p class="mu rv" id="payStrip" style="text-align:center;margin-top:26px"></p>
             <p class="mu rv" id="xStrip" style="text-align:center;margin-top:6px"></p>
         </section>
@@ -1574,8 +1581,7 @@
                             <div class="rw">
                                 <div class="f"><label for="entrega">Entrega del vehículo <span>(recibe
                                             Valetexpress)</span></label><input id="entrega" type="datetime-local"><small
-                                        class="msg"></small>
-                                </div>
+                                        class="msg"></small></div>
                                 <div class="f"><label for="recogida">Recogida <span>(entrega
                                             Valetexpress)</span></label><input id="recogida"
                                         type="datetime-local"><small class="msg"></small></div>
@@ -1584,13 +1590,14 @@
                                 <div class="pills" id="pTerm"></div><small class="msg"></small>
                             </div>
                             <div class="f"><label>Punto de encuentro para la recogida <span>(podrás cambiarlo cuando
-                                        quieras en “Mis
-                                        reservas”)</span></label>
+                                        quieras en “Mis reservas”)</span></label>
                                 <div class="pills" id="pTerm2"></div><small class="msg"></small>
                             </div>
                             <div class="f"><label for="vuelo">Número de vuelo <span>(opcional)</span></label><input
                                     id="vuelo" placeholder="Ej: AV 9500" style="text-transform:uppercase"></div>
-                            <p class="mu" id="dayInfo" style="margin:0 0 14px"></p>
+                            <div class="f"><label>Tipo de parking</label>
+                                <div class="xg" id="pkg"></div>
+                            </div>
                             <div class="f"><label>Servicios adicionales <span>(opcional)</span></label>
                                 <div class="xg" id="xtras"></div>
                             </div>
@@ -1599,14 +1606,12 @@
                             <h3>Revisa y confirma</h3>
                             <div class="rg" id="rev"></div>
                             <h3 style="margin:24px 0 10px">Método de pago</h3>
-                            <div class="ln" style="margin-bottom:12px"><span>Total a pagar</span><b id="payTot"></b>
-                            </div>
+                            <div class="ln" style="margin-bottom:12px"><span>Total a pagar en el aparcamiento</span><b
+                                    id="payTot"></b></div>
                             <div class="f">
                                 <div class="pills" id="pPay"></div><small class="msg"></small>
                             </div>
                             <div id="payF"></div>
-                            <p class="mu">🔒 Simulación: no se realiza ningún cobro ni se guardan los datos de tu
-                                tarjeta.</p>
                         </div>
                         <div class="nav2"><button class="btn lt" id="bBack" type="button">← Atrás</button><button
                                 class="btn" id="bNext" type="button">Continuar →</button></div>
@@ -1623,14 +1628,14 @@
                     <circle cx="26" cy="26" r="24" />
                     <path d="M14 27l8 8 16-17" />
                 </svg>
-                <h2 style="text-align:center;margin:0">¡Reserva simulada confirmada!</h2>
-                <p class="mu" style="text-align:center;margin:4px 0">Comprobante de ejemplo · sin cobro real</p>
+                <h2 style="text-align:center;margin:0">¡Reserva confirmada!</h2>
+                <p class="mu" style="text-align:center;margin:4px 0">Presenta tu código al valet · Pagas en el
+                    aparcamiento</p>
                 <span class="code" id="rCode"></span>
                 <div class="rg" id="rData"></div>
                 <div id="rPrice" style="margin-top:16px"></div>
                 <p class="mu" style="margin-top:12px">ℹ️ Puedes cambiar la terminal de recogida cuando quieras desde
-                    “Mis
-                    reservas”.</p>
+                    “Mis reservas”.</p>
                 <div class="nav2 acts"><button class="btn dk" onclick="window.print()">Imprimir</button><a
                         class="btn dk" href="#reservas">Mis reservas</a><a class="btn" href="#inicio">Volver al
                         inicio</a></div>
@@ -1661,8 +1666,8 @@
                         autocomplete="current-password" placeholder="Mínimo 6 caracteres"><small class="msg"></small>
                 </div>
                 <button class="btn" id="aBtn" style="width:100%">Ingresar</button>
-                <p class="mu" style="text-align:center;margin-bottom:0">Demo: las cuentas se guardan solo en este
-                    navegador.</p>
+                <p class="mu" style="text-align:center;margin-bottom:0">Crear una cuenta es opcional: también puedes <a
+                        href="#reserva"><b>reservar sin cuenta</b></a>.</p>
             </form>
         </div>
     </div>
@@ -1676,6 +1681,17 @@
             </div>
         </div>
         <div class="wrap bk">
+            <details class="pan" style="margin-bottom:16px">
+                <summary>🔎 Buscar mi reserva con el código</summary>
+                <div class="rw" style="margin-top:14px">
+                    <div class="f"><label for="fCode">Código de reserva</label><input id="fCode"
+                            placeholder="VEX-ES-XXXXXX" style="text-transform:uppercase"><small class="msg"></small>
+                    </div>
+                    <div class="f"><label for="fMail">Correo usado en la reserva</label><input id="fMail"
+                            type="email"><small class="msg"></small></div>
+                </div>
+                <button class="btn sm dk" id="fBtn" type="button">Buscar</button>
+            </details>
             <div id="bkList"></div>
         </div>
     </div>
@@ -1717,7 +1733,9 @@
     </div>
     <div id="toast"></div>
 
-    <footer id="foot"></footer>
+    <footer>
+        <div id="foot"></div><a class="fv" href="#valet">Acceso para valets</a>
+    </footer>
 
     <script>
         /* ---------- Cliente de la API ---------- */
@@ -1738,25 +1756,25 @@
         const UNIT = { hour: ['hora', 'horas'], day: ['día', 'días'], week: ['semana', 'semanas'], month: ['mes', 'meses'] };
         const NAMES = { hour: 'Por hora', day: 'Por día', week: 'Por semana', month: 'Por mes' };
         const NOTE = { hour: 'Trayectos cortos', day: 'Por día (24 h) iniciado', week: 'Viajes largos', month: 'Estancias extendidas' };
-        let MODO = 'day', TERM = '', TERM2 = '', step = 0;
+        let MODO = 'day', PARK = P.parking[0].id, TERM = '', TERM2 = '', step = 0;
 
         /* ---------- Contenido de la página principal ---------- */
-        document.title = 'Valetexpress · Valet Parking (' + ATALAYA_CONFIG.activeProfile + ')';
+        document.title = 'Valetexpress · Valet parking';
         $('hBadge').textContent = '✈ ' + C.heroBadge; $('hTitle').innerHTML = C.heroTitle; $('hText').textContent = C.heroText;
-        $('hAir').textContent = P.airport; $('hFrom').textContent = money(P.rates.day);
+        $('hAir').textContent = P.airport; $('hFrom').textContent = money(Math.min(...P.parking.map(x => x.first)));
         $('stats').innerHTML = C.stats.map(s => '<div><b data-n="' + s[0] + '" data-s="' + s[1] + '">0</b><span>' + s[2] + '</span></div>').join('');
         const GR = ['#0b1f3a,#16325c', '#16325c,#2f6fe4', '#d98c0b,#f5a524', '#0b8f5a,#12a36b'];
         $('svc').innerHTML = C.services.map((s, i) => '<div class="cd sv rv"><div class="th" style="background-image:' + (s[3] ? 'url(\'' + esc(s[3]) + '\'),' : '') + 'linear-gradient(135deg,' + GR[i % 4] + ')">' + (s[3] ? '' : s[0]) + '</div><div><h3>' + s[1] + '</h3><p>' + s[2] + '</p></div></div>').join('');
         $('stp').innerHTML = C.steps.map((s, i) => '<div class="stp rv"><i>' + (i + 1) + '</i><h3>' + s[0] + '</h3><p>' + s[1] + '</p></div>').join('');
-        $('rts').innerHTML = Object.keys(P.rates).filter(u => ATALAYA_CONFIG.billingMode !== 'day' || u === 'day').map(u => '<div class="cd rt rv" data-u="' + u + '">' + '' + '<h3>' + NAMES[u] + '</h3><div class="pr">' + money(P.rates[u]) + '</div><p>' + NOTE[u] + '</p><button class="btn dk">Reservar ahora</button></div>').join('');
-        if (ATALAYA_CONFIG.billingMode !== 'day') $('rts').removeAttribute('style');
+        const tot = (x, n) => n * x.first + x.step * n * (n - 1) / 2;
+        $('rts').innerHTML = P.parking.map(x => '<div class="cd rt rv" data-u="' + x.id + '"><span class="ic">' + x.icon + '</span><h3>' + esc(x.name) + '</h3><div class="pr">' + money(x.first) + '</div><p>primer día · +' + money(x.step) + ' por cada día adicional</p><div class="chips" style="margin-top:10px">' + [1, 3, 7].map(n => '<span>' + n + (n === 1 ? ' día' : ' días') + ': ' + money(tot(x, n)) + '</span>').join('') + '</div><button class="btn dk">Reservar</button></div>').join('');
         $('faqs').innerHTML = C.faq.map(f => '<details class="rv"><summary>' + f[0] + '</summary><p>' + f[1] + '</p></details>').join('');
-        $('foot').textContent = C.footer + ' · ' + P.countryName + ' · ' + P.timeZone;
-        $('rSub').textContent = '📍 ' + P.airport;
+        $('foot').textContent = C.footer + ' · ' + P.place;
+        $('rSub').textContent = '📍 ' + P.airport + ' · No necesitas crear una cuenta';
         $('lPl').textContent = P.plateLabel; $('placa').placeholder = P.plate; $('tel').placeholder = P.phone;
 
         // Elegir tarifa desde la página principal → abre la reserva con esa modalidad
-        $('rts').onclick = e => { const c = e.target.closest('.rt'); if (c) { setModo(c.dataset.u); location.hash = 'reserva'; } };
+        $('rts').onclick = e => { const c = e.target.closest('.rt'); if (c) { setPark(c.dataset.u); location.hash = 'reserva'; } };
 
         /* ---------- Animaciones: aparición al hacer scroll y contadores ---------- */
         const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } }), { threshold: .15 });
@@ -1771,7 +1789,6 @@
         /* ---------- Navegación (#inicio, #reserva, #servicios...) ---------- */
         function route() {
             const h = location.hash.slice(1) || 'inicio', V = { reserva: 'v-reserva', ingresar: 'v-ingresar', reservas: 'v-reservas', valet: 'v-valet' }, cur = V[h] || 'v-inicio';
-            if (h === 'reservas' && !me()) { location.hash = 'ingresar'; return; }
             if (h === 'ingresar' && me()) { location.hash = 'reservas'; return; }
             ['v-inicio', 'v-reserva', 'v-ingresar', 'v-reservas', 'v-valet'].forEach(i => $(i).classList.toggle('on', i === cur));
             if (h === 'reserva') {
@@ -1803,24 +1820,25 @@
         let QUOTE = null, QKEY = '';
         const calc = () => QUOTE;
         async function refreshQuote() {
-            const a = $('entrega').value, b = $('recogida').value, ex = [...EXT], key = a + '|' + b + '|' + ex;
+            const a = $('entrega').value, b = $('recogida').value, ex = [...EXT], key = a + '|' + b + '|' + ex + '|' + PARK;
             QKEY = key;
             if (!a || !b) { QUOTE = null; return renderSum(); }
             if (ms(b) <= ms(a)) { QUOTE = { error: 'La recogida debe ser posterior a la entrega.' }; return renderSum(); }
             try {
-                const r = await api('/api/quote', { entrega: a, recogida: b, extras: ex });
+                const r = await api('/api/quote', { entrega: a, recogida: b, extras: ex, parking: PARK });
                 if (QKEY !== key) return;
                 r.ex = r.extras; if (!r.available) r.error = 'No hay disponibilidad para esas fechas.'; QUOTE = r;
             } catch (e) { if (QKEY !== key) return; QUOTE = { error: e.message }; }
             renderSum();
         }
         function priceHTML(c) {
-            return '<div class="ln"><span>Duración</span><b>' + esc(c.dur) + '</b></div>'
-                + c.lines.map(l => '<div class="ln"><span>' + l.q + ' ' + UNIT[l.u][l.q === 1 ? 0 : 1] + ' × ' + money(P.rates[l.u]) + '</span><b>' + money(l.amount) + '</b></div>').join('')
-                + '<div class="ln"><span>Servicio valet</span><b>' + money(P.valetFee) + '</b></div>'
+            return '<div class="ln"><span>Duración</span><b>' + esc(c.dur) + ' · ' + c.days + (c.days === 1 ? ' día' : ' días') + ' facturados</b></div>'
+                + c.lines.map(l => '<div class="ln"><span>' + esc(l.label) + '</span><b>' + money(l.amount) + '</b></div>').join('')
+                + (c.valetFee ? '<div class="ln"><span>Servicio valet</span><b>' + money(c.valetFee) + '</b></div>' : '')
                 + c.ex.map(x => '<div class="ln"><span>' + x.icon + ' ' + esc(x.name) + '</span><b>' + money(x.price) + '</b></div>').join('')
-                + '<div class="ln" style="align-items:end"><span>Total estimado</span><span class="big">' + money(c.total) + '</span></div>'
-                + '<p class="mu" style="margin:6px 0 0">Incluye IVA (' + Math.round(P.taxRate * 100) + '%): ' + money(c.tax) + '</p>' + c.ex.filter(x => x.note).map(x => '<p class="mu" style="margin:4px 0 0">' + x.icon + ' ' + esc(x.note) + '</p>').join('');
+                + '<div class="ln" style="align-items:end"><span>Total a pagar</span><span class="big">' + money(c.total) + '</span></div>'
+                + '<p class="mu" style="margin:6px 0 0">Incluye IVA (' + Math.round(P.taxRate * 100) + '%): ' + money(c.tax) + '</p>'
+                + c.ex.filter(x => x.note).map(x => '<p class="mu" style="margin:4px 0 0">' + x.icon + ' ' + esc(x.note) + '</p>').join('');
         }
         function renderSum() {
             const c = calc();
@@ -1856,7 +1874,7 @@
         function items() {
             return [['Cliente', v('nombre')], ['Correo', v('email')], ['Teléfono / WhatsApp', v('tel')], [P.plateLabel, v('placa').toUpperCase()],
             ['Vehículo', v('modelo')], ['Vuelo', v('vuelo').toUpperCase() || '—'], ['Entrega a Valetexpress', fmtDate($('entrega').value)],
-            ['Recogida', fmtDate($('recogida').value)], ['Punto de entrega', TERM], ['Punto de recogida', TERM2], ['Servicios adicionales', exSel().map(x => x.name).join(', ') || 'Ninguno'], ['Sede', P.airport]];
+            ['Recogida', fmtDate($('recogida').value)], ['Punto de entrega', TERM], ['Punto de recogida', TERM2], ['Tipo de parking', P.parking.find(x => x.id === PARK).name], ['Servicios adicionales', exSel().map(x => x.name).join(', ') || 'Ninguno'], ['Sede', P.airport]];
         }
         const grid = a => a.map(i => '<div><small>' + esc(i[0]) + '</small>' + esc(i[1]) + '</div>').join('');
         function go(n) {
@@ -1865,7 +1883,7 @@
             document.querySelectorAll('.sd').forEach((d, i) => { d.classList.toggle('on', i === n); d.classList.toggle('dn', i < n); d.firstChild.textContent = i < n ? '✓' : i + 1; });
             $('fl').style.width = 'calc((100% - 120px) * ' + n / 2 + ')';
             $('bBack').style.visibility = n ? 'visible' : 'hidden';
-            $('bNext').textContent = n === 2 ? 'Pagar y confirmar ✓' : 'Continuar →';
+            $('bNext').textContent = n === 2 ? 'Confirmar reserva ✓' : 'Continuar →';
             if (n === 2) { $('rev').innerHTML = grid(items()); $('payTot').textContent = money(calc().total); }
             window.scrollTo({ top: 120, behavior: 'smooth' });
         }
@@ -1873,17 +1891,17 @@
         $('bNext').onclick = async () => {
             if (!validate(step) || (step === 2 && !validatePay())) return;
             if (step < 2) return go(step + 1);
-            const u = me(); if (!u) { PEND = true; location.hash = 'ingresar'; return; }
+            const u = me(); // la cuenta es opcional
             const btn = $('bNext'); btn.disabled = true; btn.textContent = 'Guardando…';
             try {
                 // El servidor valida, comprueba disponibilidad, recalcula el monto y guarda en la base de datos
                 const r = await api('/api/reservations', {
                     nombre: v('nombre'), email: v('email'), tel: v('tel'), placa: v('placa'), modelo: v('modelo'), vuelo: v('vuelo'),
                     entrega: v('entrega'), recogida: v('recogida'), termEntrega: TERM, termRecogida: TERM2,
-                    extras: [...EXT], paymentMethod: PAY, paymentDetail: payText()
+                    extras: [...EXT], parking: PARK, paymentMethod: PAY, paymentDetail: payText()
                 });
                 const b = r.reservation, bk = ld('atl_bk', []);
-                bk.push({ code: b.code, email: u.email, cemail: v('email').toLowerCase(), prof: b.profile, entrega: b.entrega, recogida: b.recogida, term: b.termEntrega, termRec: b.termRecogida, vuelo: b.vuelo, placa: b.placa, modelo: b.modelo, total: b.total, pay: payText(), extras: b.extras.map(x => x.name).join(', '), rating: 0, comment: '', done: false });
+                bk.push({ code: b.code, email: u ? u.email : '', cemail: v('email').toLowerCase(), prof: b.profile, entrega: b.entrega, recogida: b.recogida, term: b.termEntrega, termRec: b.termRecogida, vuelo: b.vuelo, placa: b.placa, modelo: b.modelo, parking: b.parking, total: b.total, pay: payText(), extras: b.extras.map(x => x.name).join(', '), rating: 0, comment: '', done: false });
                 put('atl_bk', bk);
                 $('rCode').textContent = b.code;
                 $('rData').innerHTML = grid(items().concat([['Método de pago', payText()]]));
@@ -1891,16 +1909,22 @@
                 $('wz').style.display = 'none'; $('receipt').style.display = 'block'; window.scrollTo(0, 100);
                 if (r.payment && r.payment.url) location.href = r.payment.url; // pasarela de pago (cuando esté activa)
             } catch (e) { setErr($('pPay'), e.message); }
-            finally { btn.disabled = false; btn.textContent = 'Pagar y confirmar ✓'; }
+            finally { btn.disabled = false; btn.textContent = 'Confirmar reserva ✓'; }
         };
         // Al volver a la reserva tras confirmar, se reinicia el asistente
-        addEventListener('hashchange', () => { if (location.hash === '#reserva' && $('receipt').style.display === 'block') { $('receipt').style.display = 'none'; $('wz').style.display = ''; document.querySelectorAll('input').forEach(i => i.value = ''); PAY = ''; renderPay(); EXT.clear(); renderExtras(); TERM2 = ''; pills('pTerm2', P.terminals.map(t => [t, t]), '', x => { TERM2 = x; setErr($('pTerm2'), ''); }); TERM = ''; pills('pTerm', P.terminals.map(t => [t, t]), '', x => { TERM = x; setErr($('pTerm'), ''); }); go(0); } });
+        addEventListener('hashchange', () => { if (location.hash === '#reserva' && $('receipt').style.display === 'block') { $('receipt').style.display = 'none'; $('wz').style.display = ''; document.querySelectorAll('input').forEach(i => i.value = ''); PAY = ''; renderPay(); EXT.clear(); renderExtras(); PARK = P.parking[0].id; renderParking(); TERM2 = ''; pills('pTerm2', P.terminals.map(t => [t, t]), '', x => { TERM2 = x; setErr($('pTerm2'), ''); }); TERM = ''; pills('pTerm', P.terminals.map(t => [t, t]), '', x => { TERM = x; setErr($('pTerm'), ''); }); go(0); } });
+        /* ---------- Tipo de parking ---------- */
+        function renderParking() {
+            $('pkg').innerHTML = P.parking.map(x => '<button type="button" class="xt' + (x.id === PARK ? ' on' : '') + '" data-id="' + x.id + '"><i>' + x.icon + '</i><span>' + esc(x.name) + '<small>' + esc(x.desc) + ' · +' + money(x.step) + ' por día adicional</small></span><b>' + money(x.first) + '</b></button>').join('');
+        }
+        function setPark(id) { PARK = id; renderParking(); refreshQuote(); }
+        $('pkg').onclick = e => { const k = e.target.closest('.xt'); if (k) setPark(k.dataset.id); };
+
         /* ---------- Servicios adicionales ---------- */
         const EXT = new Set(), exSel = () => P.extras.filter(x => EXT.has(x.id));
         function renderExtras() { $('xtras').innerHTML = P.extras.map(x => '<button type="button" class="xt' + (EXT.has(x.id) ? ' on' : '') + '" data-id="' + x.id + '"><i>' + x.icon + '</i><span>' + esc(x.name) + '<small>' + esc(x.desc || '') + '</small></span><b>+' + money(x.price) + '</b></button>').join(''); }
         $('xtras').onclick = e => { const b = e.target.closest('.xt'); if (!b) return; const id = b.dataset.id; EXT.has(id) ? EXT.delete(id) : EXT.add(id); b.classList.toggle('on', EXT.has(id)); refreshQuote(); };
         $('brandSub').textContent = P.place;
-        $('dayInfo').textContent = ATALAYA_CONFIG.billingMode === 'day' ? '💶 La tarifa se cobra por día (24 h) iniciado: ' + money(P.rates.day) + ' por día.' : '💶 Se aplica automáticamente la mejor tarifa (hora, día, semana o mes).';
         $('xStrip').textContent = 'Servicios adicionales: ' + P.extras.map(x => x.name + ' (' + money(x.price) + ')').join(' · ');
 
         /* ---------- Métodos de pago (según el país activo; simulación) ---------- */
@@ -1908,6 +1932,7 @@
         const PM = () => P.payments.find(m => m.id === PAY);
         $('payStrip').textContent = 'Medios de pago: ' + P.payments.map(m => m.name).join(' · ');
         function renderPay() {
+            if (P.payments.length === 1) { PAY = P.payments[0].id; $('pPay').closest('.f').style.display = 'none'; return payFields(); } // un solo medio: pago en el aparcamiento
             pills('pPay', P.payments.map(m => [m.id, m.icon + ' ' + m.name]), PAY, x => { PAY = x; setErr($('pPay'), ''); payFields(); });
             payFields();
         }
@@ -1919,7 +1944,7 @@
                 : m.kind === 'bank' ? '<div class="f"><label for="pBank">Banco</label><select id="pBank"><option value="">Selecciona tu banco…</option>' + m.banks.map(b => '<option>' + esc(b) + '</option>').join('') + '</select><small class="msg"></small></div>'
                     : m.kind === 'phone' ? fld('pTelP', 'Número de celular', P.phone, 'inputmode="tel"')
                         : m.kind === 'email' ? fld('pMail', 'Correo de tu cuenta', 'tucorreo@ejemplo.com', 'type="email"')
-                            : '<p class="mu">' + esc(m.note || '') + '</p>' + (m.accounts || []).map(a => '<div class="ln"><span>' + esc(a.bank) + '<br><small class="mu">' + esc(a.holder) + '</small></span><b>' + esc(a.iban) + '</b></div>').join('');
+                            : '<div class="note">🅿️ ' + esc(m.note || '') + '</div>' + (m.accounts || []).map(a => '<div class="ln"><span>' + esc(a.bank) + '<br><small class="mu">' + esc(a.holder) + '</small></span><b>' + esc(a.iban) + '</b></div>').join('');
         }
         $('payF').addEventListener('input', e => {
             const t = e.target;
@@ -1958,7 +1983,7 @@
         let PEND = false, MODE = 'in';
 
         function renderNav() {
-            $('navAcc').innerHTML = me() ? '<a href="#reservas">Mis reservas</a><a href="#" id="out">Salir</a>' : '<a href="#ingresar">Ingresar</a>';
+            $('navAcc').innerHTML = me() ? '<a href="#reservas">Mis reservas</a><a href="#" id="out">Salir</a>' : '<a href="#reservas">Mi reserva</a><a href="#ingresar">Ingresar</a>';
             const o = $('out');
             if (o) o.onclick = e => { e.preventDefault(); try { localStorage.removeItem('atl_ses'); } catch (x) { } renderNav(); location.hash === '#inicio' ? route() : location.hash = 'inicio'; };
         }
@@ -1990,22 +2015,23 @@
         // Estado de la reserva según fecha/hora (o marcada como finalizada en la demo)
         const stat = b => b.done || nowLocal() >= b.recogida ? 3 : nowLocal() >= b.entrega ? 2 : 1;
         const STX = ['', 'Próxima', 'En curso', 'Finalizada'];
+        const pkName = b => (((ATALAYA_CONFIG.profiles[b.prof] || P).parking || []).find(x => x.id === b.parking) || {}).name || '—';
         const tchg = (b, pp) => '<div class="f" style="margin:0 0 12px"><label>Cambiar terminal de recogida</label><div class="pills tchg" data-c="' + b.code + '">' + pp.terminals.map(t => '<button type="button" class="pill' + (t === (b.termRec || b.term) ? ' on' : '') + '" data-v="' + esc(t) + '">' + esc(t) + '</button>').join('') + '</div><small class="msg" style="color:var(--ok)"></small></div>';
         function renderBk() {
-            const u = me(), L = ld('atl_bk', []).filter(b => b.email === u.email).reverse();
-            $('bkTitle').textContent = 'Hola, ' + u.nombre.split(' ')[0] + ' · Mis reservas';
+            const u = me(), L = ld('atl_bk', []).filter(b => b.email === '' || (u && b.email === u.email)).reverse();
+            $('bkTitle').textContent = u ? 'Hola, ' + u.nombre.split(' ')[0] + ' · Mis reservas' : 'Mis reservas';
             $('bkList').innerHTML = !L.length ? '<div class="pan" style="text-align:center"><p>Aún no tienes reservas.</p><a class="btn" href="#reserva">Reservar ahora</a></div>' : L.map(b => {
                 const st = stat(b), pp = ATALAYA_CONFIG.profiles[b.prof] || P; let ex;
                 if (st < 3) ex = tchg(b, pp) + (ATALAYA_CONFIG.demo ? '<button class="btn sm lt fin" data-c="' + b.code + '" type="button">Marcar como finalizada (demo)</button>' : '');
                 else if (b.rating) ex = '<div class="stars ro">' + [1, 2, 3, 4, 5].map(i => '<span class="star' + (i <= b.rating ? ' on' : '') + '">★</span>').join('') + '</div>' + (b.comment ? '<p class="mu">“' + esc(b.comment) + '”</p>' : '');
                 else ex = '<div class="rate" data-c="' + b.code + '"><p class="mu" style="margin:0">¿Cómo fue tu experiencia?</p><div class="stars">' + [1, 2, 3, 4, 5].map(i => '<button type="button" class="star" data-i="' + i + '">★</button>').join('') + '</div><div class="f" style="margin:0"><input class="cm" maxlength="200" placeholder="Comentario (opcional)"><small class="msg"></small></div><button class="btn sm sbm" type="button">Enviar calificación</button></div>';
-                return '<div class="pan bkc"><div class="bkh"><b>' + esc(b.code) + '</b><span class="bg s' + st + '">' + STX[st] + '</span></div><div class="rg"><div><small>Entrega</small>' + fmtDate(b.entrega) + '</div><div><small>Recogida</small>' + fmtDate(b.recogida) + '</div><div><small>Terminal de entrega</small>' + esc(b.term) + '</div><div><small>Terminal de recogida</small><span class="tr">' + esc(b.termRec || b.term) + '</span></div><div><small>Vehículo</small>' + esc(b.modelo) + ' · ' + esc(b.placa) + '</div><div><small>Total</small>' + moneyP(b.total, pp) + '</div><div><small>Pago</small>' + esc(b.pay || '—') + '</div><div><small>Extras</small>' + esc(b.extras || 'Ninguno') + '</div></div><div style="margin-top:14px">' + ex + '</div></div>';
+                return '<div class="pan bkc"><div class="bkh"><b>' + esc(b.code) + '</b><span class="bg s' + st + '">' + STX[st] + '</span></div><div class="rg"><div><small>Entrega</small>' + fmtDate(b.entrega) + '</div><div><small>Recogida</small>' + fmtDate(b.recogida) + '</div><div><small>Terminal de entrega</small>' + esc(b.term) + '</div><div><small>Terminal de recogida</small><span class="tr">' + esc(b.termRec || b.term) + '</span></div><div><small>Vehículo</small>' + esc(b.modelo) + ' · ' + esc(b.placa) + '</div><div><small>Parking</small>' + esc(pkName(b)) + '</div><div><small>Total</small>' + moneyP(b.total, pp) + '</div><div><small>Pago</small>' + esc(b.pay || '—') + '</div><div><small>Extras</small>' + esc(b.extras || 'Ninguno') + '</div></div><div style="margin-top:14px">' + ex + '</div></div>';
             }).join('');
         }
         // Refresca estado, terminal y calificación desde el servidor
         async function syncBk() {
             const u = me(), L = ld('atl_bk', []);
-            await Promise.all(L.filter(b => b.email === u.email && b.cemail).map(async b => {
+            await Promise.all(L.filter(b => b.cemail && (b.email === '' || (u && b.email === u.email))).map(async b => {
                 try {
                     const s = (await api('/api/reservations/' + b.code + '?email=' + encodeURIComponent(b.cemail))).reservation;
                     Object.assign(b, { termRec: s.termRecogida, rating: s.rating || 0, comment: s.comment || '', done: s.phase === 'completed' });
@@ -2013,6 +2039,15 @@
             }));
             put('atl_bk', L);
         }
+        $('fBtn').onclick = async () => { // recupera una reserva hecha sin cuenta (o desde otro dispositivo)
+            const code = $('fCode').value.trim().toUpperCase(), em = $('fMail').value.trim().toLowerCase();
+            const o1 = setErr($('fCode'), code ? '' : 'Ingresa el código.'), o2 = setErr($('fMail'), em ? '' : 'Ingresa el correo.'); if (!o1 || !o2) return;
+            try {
+                const s = (await api('/api/reservations/' + code + '?email=' + encodeURIComponent(em))).reservation, L = ld('atl_bk', []);
+                if (!L.some(x => x.code === s.code)) L.push({ code: s.code, email: '', cemail: em, prof: s.profile, entrega: s.entrega, recogida: s.recogida, term: s.termEntrega, termRec: s.termRecogida, vuelo: s.vuelo, placa: s.placa, modelo: s.modelo, parking: s.parking, total: s.total, pay: s.paymentDetail || 'Pago en el aparcamiento', extras: s.extras.map(x => x.name).join(', '), rating: s.rating || 0, comment: s.comment || '', done: s.phase === 'completed' });
+                put('atl_bk', L); $('fCode').value = ''; renderBk();
+            } catch (err) { setErr($('fCode'), err.message); }
+        };
         $('bkList').onclick = async e => {
             const t = e.target, L = ld('atl_bk', []), pl = t.closest('.tchg .pill'), st = t.closest('.star');
             const patch = (b, body) => api('/api/reservations/' + b.code, Object.assign({ email: b.cemail }, body), 'PATCH');
@@ -2094,7 +2129,7 @@
             else if (st === 'received') act = B('returned', '✅ Marcar entregado al cliente');
             return '<div class="vc ' + (urgent ? 'urgent' : st === 'returned' ? 'done' : st !== 'open' ? 'mine' : '') + '"><div class="vh"><div class="route"><b>' + esc(r.termEntrega) + '</b><span>→</span><b>' + esc(r.termRecogida) + '</b></div><span class="bg s' + STG[st][1] + '">' + STG[st][0] + '</span></div>'
                 + (urgent ? '<div class="urg">⚡ Entrega en menos de 2 horas</div>' : '') + steps
-                + '<div class="vg"><div><small>Entrega</small>' + dl(r.entrega) + '</div><div><small>Recogida</small>' + dl(r.recogida) + '</div><div><small>Vehículo</small>' + esc(r.modelo) + '</div><div><small>Vuelo</small>' + esc(r.vuelo || '—') + '</div></div>'
+                + '<div class="vg"><div><small>Entrega</small>' + dl(r.entrega) + '</div><div><small>Recogida</small>' + dl(r.recogida) + '</div><div><small>Vehículo</small>' + esc(r.modelo) + '</div><div><small>Parking</small>' + esc(pkName({ prof: ATALAYA_CONFIG.activeProfile, parking: r.parking })) + '</div><div><small>Vuelo</small>' + esc(r.vuelo || '—') + '</div></div>'
                 + (r.extras.length ? '<div class="chips">' + r.extras.map(x => '<span>' + esc(x.name) + '</span>').join('') + '</div>' : '') + pay + cl
                 + (adm && r.valet ? '<div class="mu">Valet: <b>' + esc(r.valet) + '</b> · ' + esc(r.code) + (r.cliente ? '' : '') + '</div>' : '') + (act ? '<div class="acts2">' + act + '</div>' : '') + '</div>';
         }
@@ -2138,7 +2173,7 @@
             finally { btn.disabled = false; }
         };
 
-        renderExtras(); renderPay(); go(0); renderNav(); route();
+        renderParking(); renderExtras(); renderPay(); go(0); renderNav(); route();
     </script>
 </body>
 
