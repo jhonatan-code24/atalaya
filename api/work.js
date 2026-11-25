@@ -29,19 +29,28 @@ module.exports = wrap(['GET', 'POST'], async (req, res) => {
         return send(res, 200, { open: open.map(r => view(r, {}, false)), mine: mine.map(r => view(r, {}, true)) });
     }
 
-    const { action } = req.body || {}, code = String((req.body || {}).code || '').toUpperCase();
-    // Cada transición es atómica: si otro valet la tomó antes, no se actualiza ninguna fila
-    const Q = {
-        take: [`update reservations set assigned_to = $2::uuid, stage = 'assigned', assigned_at = now(), updated_at = now() where code = $1 and stage = 'open' and status in ('confirmed','pending') returning ${R.COLS}`, [code, me]],
-        release: [`update reservations set assigned_to = null, stage = 'open', assigned_at = null, updated_at = now() where code = $1 and stage in ('assigned','received') and ($3::boolean or (assigned_to = $2::uuid and stage = 'assigned')) returning ${R.COLS}`, [code, me, adm]],
-        received: [`update reservations set stage = 'received', updated_at = now() where code = $1 and stage = 'assigned' and assigned_to = $2::uuid returning ${R.COLS}`, [code, me]],
-        returned: [`update reservations set stage = 'returned', status = 'completed', payment_status = case when payment_method = 'cash' then 'paid' else payment_status end, paid_at = case when payment_method = 'cash' then now() else paid_at end, updated_at = now() where code = $1 and stage = 'received' and assigned_to = $2::uuid returning ${R.COLS}`, [code, me]]
-    };
-    if (!Q[action]) throw new HttpError(400, 'Acción no válida.');
-    if (adm && action !== 'release') throw new HttpError(403, 'El administrador solo puede liberar reservas.');
-    const { rows: [r] } = await q(...Q[action]);
-    if (!r) throw new HttpError(409, action === 'take' ? 'Otro valet ya tomó esta reserva.' : 'La reserva cambió de estado. Actualiza la lista.');
-    const ev = { take: 'reservation.assigned', release: 'reservation.released', received: 'reservation.received', returned: 'reservation.completed' }[action];
-    await notifyN8n(ev, { ...R.full(r), valet: s.name }); // p. ej. avisar al cliente por WhatsApp/correo desde n8n
+    const { action, to } = req.body || {}, code = String((req.body || {}).code || '').toUpperCase();
+    const ORDER = ['assigned', 'waiting', 'picked', 'parked', 'enroute', 'returned']; // el último = carro entregado → reserva completada
+    const LOG = st => `stage_log = stage_log || jsonb_build_array(jsonb_build_object('stage', ${st}::text, 'at', now()))`;
+    let r;
+    if (action === 'take' && !adm) { // atómico: si otro valet la tomó antes, no actualiza nada
+        r = (await q(`update reservations set assigned_to = $2::uuid, stage = 'assigned', assigned_at = now(), ${LOG("'assigned'")}, updated_at = now() where code = $1 and stage = 'open' and status in ('confirmed','pending') returning ${R.COLS}`, [code, me])).rows[0];
+        if (!r) throw new HttpError(409, 'Otro valet ya tomó esta reserva.');
+    } else if (action === 'release') { // el valet solo antes de empezar; el admin en cualquier momento (menos si ya se entregó)
+        r = (await q(`update reservations set assigned_to = null, stage = 'open', assigned_at = null, ${LOG("'open'")}, updated_at = now() where code = $1 and stage in ('assigned','waiting','picked','parked','enroute') and ($3::boolean or (assigned_to = $2::uuid and stage = 'assigned')) returning ${R.COLS}`, [code, me, adm])).rows[0];
+        if (!r) throw new HttpError(409, 'No se puede liberar: la reserva ya avanzó o cambió. Actualiza la lista.');
+    } else if (action === 'set' && !adm) { // solo al estado siguiente o al anterior (para corregir un error)
+        const i = ORDER.indexOf(to), cur = (await q('select stage from reservations where code = $1 and assigned_to = $2::uuid', [code, me])).rows[0], j = cur ? ORDER.indexOf(cur.stage) : -1;
+        if (i < 0 || j < 0 || cur.stage === 'returned' || Math.abs(i - j) !== 1) throw new HttpError(409, 'Cambio de estado no permitido. Actualiza la lista.');
+        r = (await q(`update reservations set stage = $3::text, ${LOG('$3')},
+        status = case when $3::text = 'returned' then 'completed' else status end,
+        payment_status = case when $3::text = 'returned' and payment_method = 'cash' then 'paid' else payment_status end,
+        paid_at = case when $3::text = 'returned' and payment_method = 'cash' then now() else paid_at end, updated_at = now()
+        where code = $1 and stage = $2 and assigned_to = $4::uuid returning ${R.COLS}`, [code, cur.stage, to, me])).rows[0];
+        if (!r) throw new HttpError(409, 'La reserva cambió de estado. Actualiza la lista.');
+    } else throw new HttpError(adm ? 403 : 400, adm ? 'El administrador solo puede liberar reservas.' : 'Acción no válida.');
+
+    const ev = action === 'take' ? 'reservation.assigned' : action === 'release' ? 'reservation.released' : to === 'returned' ? 'reservation.completed' : 'reservation.stage';
+    await notifyN8n(ev, { ...R.full(r), valet: s.name }); // p. ej. avisar al cliente por WhatsApp/correo en cada cambio
     send(res, 200, { ok: true, reservation: view(r, { [r.assigned_to]: s.name }, true) });
 });

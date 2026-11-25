@@ -1474,6 +1474,67 @@
             color: #6f819f;
             text-decoration: underline
         }
+
+        .tl {
+            list-style: none;
+            margin: 14px 0 0;
+            padding: 12px 14px;
+            background: var(--bg);
+            border-radius: 12px
+        }
+
+        .tl li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 0;
+            color: var(--mu);
+            font-size: .88rem
+        }
+
+        .tl i {
+            width: 20px;
+            height: 20px;
+            flex: 0 0 20px;
+            border-radius: 50%;
+            border: 2px solid var(--ln);
+            background: #fff;
+            display: grid;
+            place-items: center;
+            font-style: normal;
+            font-size: .7rem;
+            color: #fff
+        }
+
+        .tl li.dn {
+            color: var(--tx);
+            font-weight: 600
+        }
+
+        .tl li.dn i {
+            background: var(--ok);
+            border-color: var(--ok)
+        }
+
+        .tl li.nx i {
+            border-color: var(--ac);
+            animation: pop 1.6s infinite
+        }
+
+        .tl small {
+            margin-left: auto;
+            color: var(--mu);
+            font-weight: 400;
+            font-size: .76rem
+        }
+
+        .sgs {
+            flex-wrap: wrap
+        }
+
+        .sgs span {
+            flex: 1 1 30%
+        }
     </style>
 </head>
 
@@ -1902,7 +1963,7 @@
                     extras: [...EXT], parking: PARK, paymentMethod: PAY, paymentDetail: payText()
                 });
                 const b = r.reservation, bk = ld('atl_bk', []);
-                bk.push({ code: b.code, email: u ? u.email : '', cemail: v('email').toLowerCase(), prof: b.profile, entrega: b.entrega, recogida: b.recogida, term: b.termEntrega, termRec: b.termRecogida, vuelo: b.vuelo, placa: b.placa, modelo: b.modelo, parking: b.parking, total: b.total, pay: payText(), extras: b.extras.map(x => x.name).join(', '), rating: 0, comment: '', done: false });
+                bk.push({ code: b.code, email: u ? u.email : '', cemail: v('email').toLowerCase(), prof: b.profile, entrega: b.entrega, recogida: b.recogida, term: b.termEntrega, termRec: b.termRecogida, vuelo: b.vuelo, placa: b.placa, modelo: b.modelo, parking: b.parking, stage: b.stage, log: [], created: b.createdAt, total: b.total, pay: payText(), extras: b.extras.map(x => x.name).join(', '), rating: 0, comment: '', done: false });
                 put('atl_bk', bk);
                 $('rCode').textContent = b.code;
                 $('rMail').textContent = r.emailSent ? '📧 Te enviamos la confirmación a ' + v('email') + ' (revisa también la carpeta de spam).' : '';
@@ -2015,8 +2076,18 @@
         };
 
         // Estado de la reserva según fecha/hora (o marcada como finalizada en la demo)
-        const stat = b => b.done || nowLocal() >= b.recogida ? 3 : nowLocal() >= b.entrega ? 2 : 1;
-        const STX = ['', 'Próxima', 'En curso', 'Finalizada'];
+        const LBL = { assigned: 'Valet asignado', waiting: 'Cliente en espera', picked: 'Carro recogido', parked: 'Carro parqueado', enroute: 'Carro en camino a entrega', returned: 'Carro entregado' };
+        const ORDER = ['assigned', 'waiting', 'picked', 'parked', 'enroute', 'returned']; // al llegar a "entregado" la reserva queda completada
+        const stat = b => b.done || b.stage === 'returned' ? 3 : b.stage && b.stage !== 'open' ? 2 : 1;
+        const badge = (b, st) => st === 3 ? 'Reserva completada' : b.stage && b.stage !== 'open' ? LBL[b.stage] : 'Confirmada';
+        const hm = iso => new Intl.DateTimeFormat(P.locale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: P.timeZone }).format(new Date(iso));
+        // Línea de tiempo que ve el cliente
+        function tl(b) {
+            const cur = b.stage === 'returned' || b.done ? 5 : ORDER.indexOf(b.stage || 'open'), at = {};
+            (b.log || []).forEach(x => { at[x.stage] = x.at; });
+            const steps = [['Reserva confirmada', b.created, true]].concat(ORDER.map((k, i) => [LBL[k], at[k], i <= cur])), nx = steps.findIndex(s => !s[2]);
+            return '<ul class="tl">' + steps.map((s, i) => '<li class="' + (s[2] ? 'dn' : i === nx ? 'nx' : '') + '"><i>' + (s[2] ? '✓' : '') + '</i><span>' + esc(s[0]) + '</span>' + (s[2] && s[1] ? '<small>' + hm(s[1]) + '</small>' : '') + '</li>').join('') + '</ul>';
+        }
         const pkName = b => (((ATALAYA_CONFIG.profiles[b.prof] || P).parking || []).find(x => x.id === b.parking) || {}).name || '—';
         const tchg = (b, pp) => '<div class="f" style="margin:0 0 12px"><label>Cambiar terminal de recogida</label><div class="pills tchg" data-c="' + b.code + '">' + pp.terminals.map(t => '<button type="button" class="pill' + (t === (b.termRec || b.term) ? ' on' : '') + '" data-v="' + esc(t) + '">' + esc(t) + '</button>').join('') + '</div><small class="msg" style="color:var(--ok)"></small></div>';
         function renderBk() {
@@ -2027,26 +2098,27 @@
                 if (st < 3) ex = tchg(b, pp) + (ATALAYA_CONFIG.demo ? '<button class="btn sm lt fin" data-c="' + b.code + '" type="button">Marcar como finalizada (demo)</button>' : '');
                 else if (b.rating) ex = '<div class="stars ro">' + [1, 2, 3, 4, 5].map(i => '<span class="star' + (i <= b.rating ? ' on' : '') + '">★</span>').join('') + '</div>' + (b.comment ? '<p class="mu">“' + esc(b.comment) + '”</p>' : '');
                 else ex = '<div class="rate" data-c="' + b.code + '"><p class="mu" style="margin:0">¿Cómo fue tu experiencia?</p><div class="stars">' + [1, 2, 3, 4, 5].map(i => '<button type="button" class="star" data-i="' + i + '">★</button>').join('') + '</div><div class="f" style="margin:0"><input class="cm" maxlength="200" placeholder="Comentario (opcional)"><small class="msg"></small></div><button class="btn sm sbm" type="button">Enviar calificación</button></div>';
-                return '<div class="pan bkc"><div class="bkh"><b>' + esc(b.code) + '</b><span class="bg s' + st + '">' + STX[st] + '</span></div><div class="rg"><div><small>Entrega</small>' + fmtDate(b.entrega) + '</div><div><small>Recogida</small>' + fmtDate(b.recogida) + '</div><div><small>Terminal de entrega</small>' + esc(b.term) + '</div><div><small>Terminal de recogida</small><span class="tr">' + esc(b.termRec || b.term) + '</span></div><div><small>Vehículo</small>' + esc(b.modelo) + ' · ' + esc(b.placa) + '</div><div><small>Parking</small>' + esc(pkName(b)) + '</div><div><small>Total</small>' + moneyP(b.total, pp) + '</div><div><small>Pago</small>' + esc(b.pay || '—') + '</div><div><small>Extras</small>' + esc(b.extras || 'Ninguno') + '</div></div><div style="margin-top:14px">' + ex + '</div></div>';
+                return '<div class="pan bkc"><div class="bkh"><b>' + esc(b.code) + '</b><span class="bg s' + st + '">' + badge(b, st) + '</span></div><div class="rg"><div><small>Entrega</small>' + fmtDate(b.entrega) + '</div><div><small>Recogida</small>' + fmtDate(b.recogida) + '</div><div><small>Terminal de entrega</small>' + esc(b.term) + '</div><div><small>Terminal de recogida</small><span class="tr">' + esc(b.termRec || b.term) + '</span></div><div><small>Vehículo</small>' + esc(b.modelo) + ' · ' + esc(b.placa) + '</div><div><small>Parking</small>' + esc(pkName(b)) + '</div><div><small>Total</small>' + moneyP(b.total, pp) + '</div><div><small>Pago</small>' + esc(b.pay || '—') + '</div><div><small>Extras</small>' + esc(b.extras || 'Ninguno') + '</div></div>' + tl(b) + '<div style="margin-top:14px">' + ex + '</div></div>';
             }).join('');
         }
         // Refresca estado, terminal y calificación desde el servidor
-        async function syncBk() {
-            const u = me(), L = ld('atl_bk', []);
+        async function syncBk() { // trae el estado más reciente desde el servidor; devuelve true si algo cambió
+            const u = me(), L = ld('atl_bk', []), before = JSON.stringify(L);
             await Promise.all(L.filter(b => b.cemail && (b.email === '' || (u && b.email === u.email))).map(async b => {
                 try {
                     const s = (await api('/api/reservations/' + b.code + '?email=' + encodeURIComponent(b.cemail))).reservation;
-                    Object.assign(b, { termRec: s.termRecogida, rating: s.rating || 0, comment: s.comment || '', done: s.phase === 'completed' });
+                    Object.assign(b, { termRec: s.termRecogida, rating: s.rating || 0, comment: s.comment || '', done: s.phase === 'completed', stage: s.stage, log: s.stageLog || [], created: s.createdAt });
                 } catch (e) { }
             }));
-            put('atl_bk', L);
+            put('atl_bk', L); return JSON.stringify(L) !== before;
         }
+        setInterval(() => { if (location.hash === '#reservas') syncBk().then(ch => ch && renderBk()); }, 30000); // el cliente ve los cambios sin recargar
         $('fBtn').onclick = async () => { // recupera una reserva hecha sin cuenta (o desde otro dispositivo)
             const code = $('fCode').value.trim().toUpperCase(), em = $('fMail').value.trim().toLowerCase();
             const o1 = setErr($('fCode'), code ? '' : 'Ingresa el código.'), o2 = setErr($('fMail'), em ? '' : 'Ingresa el correo.'); if (!o1 || !o2) return;
             try {
                 const s = (await api('/api/reservations/' + code + '?email=' + encodeURIComponent(em))).reservation, L = ld('atl_bk', []);
-                if (!L.some(x => x.code === s.code)) L.push({ code: s.code, email: '', cemail: em, prof: s.profile, entrega: s.entrega, recogida: s.recogida, term: s.termEntrega, termRec: s.termRecogida, vuelo: s.vuelo, placa: s.placa, modelo: s.modelo, parking: s.parking, total: s.total, pay: s.paymentDetail || 'Pago en el aparcamiento', extras: s.extras.map(x => x.name).join(', '), rating: s.rating || 0, comment: s.comment || '', done: s.phase === 'completed' });
+                if (!L.some(x => x.code === s.code)) L.push({ code: s.code, email: '', cemail: em, prof: s.profile, entrega: s.entrega, recogida: s.recogida, term: s.termEntrega, termRec: s.termRecogida, vuelo: s.vuelo, placa: s.placa, modelo: s.modelo, parking: s.parking, stage: s.stage, log: s.stageLog || [], created: s.createdAt, total: s.total, pay: s.paymentDetail || 'Pago en el aparcamiento', extras: s.extras.map(x => x.name).join(', '), rating: s.rating || 0, comment: s.comment || '', done: s.phase === 'completed' });
                 put('atl_bk', L); $('fCode').value = ''; renderBk();
             } catch (err) { setErr($('fCode'), err.message); }
         };
@@ -2083,7 +2155,9 @@
             return (d === t ? 'Hoy' : d === tm ? 'Mañana' : new Intl.DateTimeFormat(P.locale, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(ms(v)))) + ' · ' + v.slice(11);
         };
         const soon = v => (ms(v) - ms(nowLocal())) / 60000 < 120; // entrega en menos de 2 h (o atrasada)
-        const STG = { open: ['Disponible', 1], assigned: ['Asignada', 2], received: ['Vehículo recibido', 2], returned: ['Entregada', 3] };
+        const STG = { open: ['Disponible', 1], assigned: ['Asignada', 2], waiting: ['Cliente en espera', 2], picked: ['Carro recogido', 2], parked: ['Carro parqueado', 2], enroute: ['En camino a entrega', 2], returned: ['Completada', 3] };
+        const NEXTB = { assigned: ['waiting', '🧍 Cliente en espera'], waiting: ['picked', '🚗 Carro recogido'], picked: ['parked', '🅿️ Carro parqueado'], parked: ['enroute', '🛣️ Carro en camino a entrega'], enroute: ['returned', '✅ Carro entregado'] };
+        const PREVS = { waiting: 'assigned', picked: 'waiting', parked: 'picked', enroute: 'parked' };
         const EMPTY = { open: '🎉 No hay reservas disponibles por ahora. Esta lista se actualiza sola.', mine: 'Aún no has tomado reservas. Ve a “Disponibles”.', all: 'Todavía no hay reservas.' };
 
         async function initValet() {
@@ -2119,21 +2193,21 @@
             $('dList').innerHTML = rows.length ? rows.map(cardHTML).join('') : '<div class="pan" style="text-align:center;color:var(--mu)">' + EMPTY[TAB] + '</div>';
         }
         function cardHTML(r) {
-            const adm = ST.role === 'admin', st = r.stage, urgent = st === 'open' && soon(r.entrega), B = (a, t, cls) => '<button class="btn ' + (cls || '') + '" data-a="' + a + '" data-c="' + esc(r.code) + '" type="button">' + t + '</button>';
+            const adm = ST.role === 'admin', st = r.stage, urgent = st === 'open' && soon(r.entrega);
+            const B = (a, t, cls, to) => '<button class="btn ' + (cls || '') + '" data-a="' + a + '" data-c="' + esc(r.code) + '"' + (to ? ' data-to="' + to + '"' : '') + ' type="button">' + t + '</button>';
             const pay = r.paymentMethod === 'cash' && r.paymentStatus !== 'paid' ? '<div class="note">💵 Cobrar en el aparcamiento: <b>' + moneyP(r.total, P) + '</b></div>' : r.paymentStatus === 'paid' ? '<div class="note ok">✅ Pagada</div>' : '';
-            const idx = { assigned: 0, received: 1, returned: 3 }[st];
-            const steps = idx === undefined ? '' : '<div class="sgs">' + ['1 · Asignada', '2 · Vehículo recibido', '3 · Entregado'].map((x, i) => '<span class="' + (i < idx ? 'dn' : i === idx ? 'on' : '') + '">' + x + '</span>').join('') + '</div>';
+            const idx = ORDER.indexOf(st);
+            const steps = idx < 0 ? '' : '<div class="sgs">' + ORDER.map((k, i) => '<span class="' + (i < idx || st === 'returned' ? 'dn' : i === idx ? 'on' : '') + '">' + (i + 1) + ' · ' + LBL[k] + '</span>').join('') + '</div>';
             const cl = r.cliente ? '<div class="cl"><div><b>' + esc(r.cliente) + '</b><br><span class="mu">' + esc(r.placa) + ' · ' + esc(r.telefono) + '</span></div><div class="acts2" style="margin:0"><a class="btn sm" style="background:#25d366;color:#fff" target="_blank" rel="noopener" href="https://wa.me/' + String(r.telefono).replace(/\D/g, '') + '">WhatsApp</a><a class="btn sm lt" href="tel:' + esc(r.telefono) + '">Llamar</a></div></div>' : '';
             let act = '';
-            if (adm) act = (st === 'assigned' || st === 'received') ? B('release', 'Liberar reserva', 'lt') : '';
+            if (adm) act = ['assigned', 'waiting', 'picked', 'parked', 'enroute'].includes(st) ? B('release', 'Liberar reserva', 'lt') : '';
             else if (st === 'open') act = B('take', '✋ Tomar reserva');
-            else if (st === 'assigned') act = B('received', '🚗 Marcar vehículo recibido') + B('release', 'Liberar', 'lt');
-            else if (st === 'received') act = B('returned', '✅ Marcar entregado al cliente');
+            else if (NEXTB[st]) act = B('set', NEXTB[st][1], 'go', NEXTB[st][0]) + (PREVS[st] ? B('set', '↩ Estado anterior', 'lt', PREVS[st]) : B('release', 'Liberar', 'lt')); // botón principal = siguiente estado
             return '<div class="vc ' + (urgent ? 'urgent' : st === 'returned' ? 'done' : st !== 'open' ? 'mine' : '') + '"><div class="vh"><div class="route"><b>' + esc(r.termEntrega) + '</b><span>→</span><b>' + esc(r.termRecogida) + '</b></div><span class="bg s' + STG[st][1] + '">' + STG[st][0] + '</span></div>'
                 + (urgent ? '<div class="urg">⚡ Entrega en menos de 2 horas</div>' : '') + steps
                 + '<div class="vg"><div><small>Entrega</small>' + dl(r.entrega) + '</div><div><small>Recogida</small>' + dl(r.recogida) + '</div><div><small>Vehículo</small>' + esc(r.modelo) + '</div><div><small>Parking</small>' + esc(pkName({ prof: ATALAYA_CONFIG.activeProfile, parking: r.parking })) + '</div><div><small>Vuelo</small>' + esc(r.vuelo || '—') + '</div></div>'
                 + (r.extras.length ? '<div class="chips">' + r.extras.map(x => '<span>' + esc(x.name) + '</span>').join('') + '</div>' : '') + pay + cl
-                + (adm && r.valet ? '<div class="mu">Valet: <b>' + esc(r.valet) + '</b> · ' + esc(r.code) + (r.cliente ? '' : '') + '</div>' : '') + (act ? '<div class="acts2">' + act + '</div>' : '') + '</div>';
+                + (adm && r.valet ? '<div class="mu">Valet: <b>' + esc(r.valet) + '</b> · ' + esc(r.code) + '</div>' : '') + (act ? '<div class="acts2">' + act + '</div>' : '') + '</div>';
         }
         function staffHTML(s) {
             const B = (a, t, cls) => '<button class="btn sm ' + (cls || '') + '" data-a="' + a + '" data-s="' + s.id + '" type="button">' + t + '</button>';
@@ -2146,9 +2220,10 @@
         $('dOut').onclick = async () => { try { await api('/api/staff', { action: 'logout' }); } catch (e) { } ST = null; initValet(); };
         $('dList').onclick = async e => {
             const b = e.target.closest('button[data-a]'); if (!b) return;
-            const a = b.dataset.a; if (['release', 'reject', 'suspend'].includes(a) && !confirm('¿Confirmas esta acción?')) return;
+            const a = b.dataset.a, ask = ['release', 'reject', 'suspend'].includes(a) ? '¿Confirmas esta acción?' : b.dataset.to === 'returned' ? '¿Confirmas que entregaste el carro al cliente? La reserva quedará completada.' : '';
+            if (ask && !confirm(ask)) return;
             b.disabled = true;
-            try { await (b.dataset.s ? api('/api/admin', { action: a, id: b.dataset.s }) : api('/api/work', { action: a, code: b.dataset.c })); toast('✓ Listo', true); }
+            try { await (b.dataset.s ? api('/api/admin', { action: a, id: b.dataset.s }) : api('/api/work', { action: a, code: b.dataset.c, to: b.dataset.to })); toast('✓ Listo', true); }
             catch (err) { toast(err.message); }
             await loadTab(true);
         };
